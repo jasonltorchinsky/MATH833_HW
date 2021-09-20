@@ -1,0 +1,90 @@
+\textit{Response.} 
+
+\begin{enumerate}[(a)]
+
+	\item To find the form of the condition distribution $\func{p}{\va{x}_1\ \vert\ \va{x}_2}$, we will use Bayes' theorem 
+
+\begin{equation}
+	\func{p}{\va{x}_1\ \vert\ \va{x}_2} = \frac{\func{p}{\va{x}_1,\ \va{x}_2}}{\func{p}{\va{x}_2}} = \frac{\func{p}{\va{x}}}{\func{p}{\va{x}_2}}.
+\end{equation}
+
+Writing the inverse of $\vb{R}$ as
+
+\begin{equation}
+	\vb{R}^{-1} = \mqty[ \vb{A} & \vb{B} \\ \vb{C} & \vb{D} ],
+\end{equation}
+
+we have
+
+\begin{equation}
+	\func{p}{\va{x}} = \frac{1}{\sqrt{\gpr{2\,\pi}^{n}\,\det{\vb{R}}}}\,e^{-\frac{1}{2}\,\gpr{\gpr{\va{x}_1 - \va{\mu}_1}^T\,\vb{A}\,\gpr{\va{x}_1 - \va{\mu}_1} + \gpr{\va{x}_1 - \va{\mu}_1}^T\,\gpr{\vb{B} + \vb{C}^T}\,\gpr{\va{x}_2 - \va{\mu}_2} + \gpr{\va{x}_2 - \va{\mu}_2}^T\,\vb{D}\,\gpr{\va{x}_2 - \va{\mu}_2}}}
+\end{equation}
+
+where $n = n_1 + n_2$ is the sum of the respective lengths of $\va{x}_1$ and $\va{x}_2$. The probability density function for $\va{x}_2$ is given by
+
+\begin{equation}
+	\func{p}{\va{x}_2} = \frac{1}{\sqrt{\gpr{2\,\pi}^{n_2}\,\det{\vb{R}_{22}}}}\,e^{-\frac{1}{2}\,\gpr{\va{x}_2 - \va{\mu}_2}^T\,\vb{R}_{22}^{-1}\,\gpr{\va{x}_2 - \va{\mu}_2}}.
+\end{equation}
+
+Therefore, by Bayes' theorem we have
+
+\begin{align}
+	\func{p}{\va{x}_1\ \vert\ \va{x}_2} & = \frac{\func{p}{\va{x}}}{\func{p}{\va{x}_2}} \nonumber \\
+		&= \frac{1}{\sqrt{\gpr{2\,\pi}^{n_1}\,\frac{\det{\vb{R}}}{\det{\vb{R}_{22}}}}}\,e^{-\frac{1}{2}\,\gpr{\gpr{\va{x}_1 - \va{\mu}_1}^T\,\vb{A}\,\gpr{\va{x}_1 - \va{\mu}_1} + \gpr{\va{x}_1 - \va{\mu}_1}^T\,\gpr{\vb{B} + \vb{C}^T}\,\gpr{\va{x}_2 - \va{\mu}_2} + \gpr{\va{x}_2 - \va{\mu}_2}^T\,\gpr{\vb{D} - {\vb{R}_{22}}^{-1}}\,\gpr{\va{x}_2 - \va{\mu}_2}}} \nonumber \\
+		&= \frac{1}{\sqrt{\gpr{2\,\pi}^{n_1}\,\frac{\det{\vb{R}}}{\det{\vb{R}_{22}}}}}\,e^{-\frac{1}{2}\,\gpr{\va{x} - \va{\mu}}^T\,\mqty[\vb{A} & \vb{B} \\ \vb{C} & \vb{D} - \vb{R}_{22}^{-1}]\,\gpr{\va{x} - \va{\mu}}} \label{eqn:pre_cond_dist}
+\end{align}
+
+To show that this equation represents a Gaussian distribution, we first calculate the ratio of determinants. Since $\vb{R}_{22}$ is invertible, we have
+
+\begin{equation}
+	\det{\vb{R}} = \det{\vb{R}_{11} - \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}}\,\det{\vb{R}_{22}},
+\end{equation}
+
+and therefore
+
+\begin{equation}
+	\frac{\det{\vb{R}}}{\det{\vb{R}_{22}}} = \det{\vb{R}_{11} - \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}} = \det{\overline{\vb{R}}}.
+\end{equation}
+
+Further, again from the invertibility of $\vb{R}_{22}$ we may write $\vb{R}^{-1}$ in terms of the blocks of $\vb{R}$
+
+\begin{align}
+	\vb{R}^{-1} &= \mqty[ \gpr{\vb{R}_{11} - \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}}^{-1} & -\gpr{\vb{R}_{11} - \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}}^{-1}\,\vb{R}_{12}\,\vb{R}_{22}^{-1} \\
+	 -\vb{R}_{22}^{-1}\,\vb{R}_{21}\,\gpr{\vb{R}_{11} - \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}}^{-1} & \vb{R}_{22}^{-1}\,\vb{R}_{21}\,\gpr{\vb{R}_{11} - \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}}^{-1}\,\,\vb{R}_{12}\,\vb{R}_{22}^{-1} + \vb{R}_{22}^{-1} ] \nonumber \\
+	 	 	&= \mqty[ \overline{\vb{R}}^{-1} & -\overline{\vb{R}}^{-1}\,\vb{R}_{12}\,\vb{R}_{22}^{-1} \\
+	 				  -\vb{R}_{22}^{-1}\,\vb{R}_{21}\,\overline{\vb{R}}^{-1} & \vb{R}_{22}^{-1}\,\vb{R}_{21}\,\overline{\vb{R}}^{-1}\,\vb{R}_{12}\,\vb{R}_{22}^{-1} + \vb{R}_{22}^{-1} ]
+\end{align}
+
+Hence, the matrix in the exponent of Eqn.~\ref{eqn:pre_cond_dist} is given by
+
+\begin{equation}
+	\mqty[\vb{A} & \vb{B} \\ \vb{C} & \vb{D} - \vb{R}_{22}^{-1}] = \mqty[ \overline{\vb{R}}^{-1} & -\overline{\vb{R}}^{-1}\,\vb{R}_{12}\,\vb{R}_{22}^{-1} \\
+	 				  -\vb{R}_{22}^{-1}\,\vb{R}_{21}\,\overline{\vb{R}}^{-1} & \vb{R}_{22}^{-1}\,\vb{R}_{21}\,\overline{\vb{R}}^{-1}\,\vb{R}_{12}\,\vb{R}_{22}^{-1} ]
+\end{equation}
+
+
+Therefore, by additionally utiling the symmetry of $\vb{R}$ (specifically $\vb{R}_{21} = \vb{R}_{12}^{T}$) and $\overline{\vb{R}}$, we may rewrite the exponent in Eqn.~\ref{eqn:pre_cond_dist} as
+
+\begin{align}
+	\gpr{\va{x} - \va{\mu}}^{T}\,\mqty[\vb{A} & \vb{B} \\ \vb{C} & \vb{D} - \vb{R}_{22}^{-1}]\,\gpr{\va{x} - \va{\mu}} &= \gpr{\va{x}_1 - \va{\mu}_1}^{T}\,\overline{\vb{R}}^{-1}\,\gpr{\va{x}_1 - \va{\mu}_1} \nonumber \\
+			&\qquad - \gpr{\va{x}_1 - \va{\mu}_1}^{T}\,\gpr{\overline{\vb{R}}^{-1}\,\vb{R}_{12}\,\vb{R}_{22}^{-1} + \gpr{\vb{R}_{22}^{-1}\,\vb{R}_{21}\,\overline{\vb{R}}^{-1}}^{T}}\,\gpr{\va{x}_2 - \va{\mu}_2} \nonumber \\
+			&\qquad - \gpr{\va{x}_2 - \va{\mu}_2}^{T}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}\,\overline{\vb{R}}^{-1}\,\gpr{\va{x}_1 - \va{\mu}_1} \nonumber \\
+			&\qquad + \gpr{\va{x}_2 - \va{\mu}_2}^{T}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}\,\overline{\vb{R}}^{-1}\,\vb{R}_{12}\,\vb{R}_{22}^{-1}\,\gpr{\va{x}_2 - \va{\mu}_2} \nonumber \\
+		&= \gpr{\va{x}_1 - \va{\mu}_1}^{T}\,\overline{\vb{R}}^{-1}\,\gpr{\va{x}_1 - \va{\mu}_1} \nonumber \\
+			&\qquad - \gpr{\va{x}_1 - \va{\mu}_1}^{T}\,\overline{\vb{R}}^{-1}\,\gpr{\overline{\va{\mu}} - \va{\mu}_1} \nonumber \\
+			&\qquad - \gpr{\overline{\va{\mu}} - \va{\mu}_1}^{T}\,\overline{\vb{R}}^{-1}\,\gpr{\va{x}_1 - \va{\mu}_1} \nonumber \\
+			&\qquad + \gpr{\overline{\va{\mu}} - \va{\mu}_1}^{T}\,\overline{\vb{R}}^{-1}\,\gpr{\overline{\va{\mu}} - \va{\mu}_1} \nonumber \\
+		&= \gpr{\va{x}_1 - \overline{\va{\mu}}}^{T}\,\overline{\vb{R}}^{-1}\,\gpr{\va{x}_1 - \overline{\va{\mu}}}.
+\end{align}
+
+Therefore, Eqn.~\ref{eqn:pre_cond_dist} may be written in the form
+
+\begin{align}
+	\func{p}{\va{x}_1\ \vert\ \va{x}_2} &= \frac{1}{\sqrt{\gpr{2\,\pi}^{n_1}\,\det{\overline{\vb{R}}}}}\,e^{-\frac{1}{2}\,\gpr{\va{x} - \overline{\va{\mu}}}^T\,\overline{\vb{R}}^{-1}\,\gpr{\va{x} - \overline{\va{\mu}}}},
+\end{align}
+
+which implies the conditional distribution $\func{p}{\va{x}_{1}\ \vert\ \va{x}_2}$ is Gaussian with mean $\overline{\va{\mu}}$ and covariance $\overline{\vb{R}}$.
+
+	
+
+\end{enumerate}

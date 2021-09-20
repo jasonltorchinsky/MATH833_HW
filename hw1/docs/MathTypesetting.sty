@@ -1,0 +1,60 @@
+\ProvidesPackage{MathTypesetting}
+
+% Defined and redefined commands to make typesetting easier.
+
+% Grouping Symbol Shortcuts.
+  \newcommand{\gpr}[1]{\ensuremath{\left( #1 \right)}} % (#1).
+  \newcommand{\gbkt}[1]{\ensuremath{\left[ #1 \right]}} % [#1].
+  \newcommand{\gbrc}[1]{\ensuremath{\left\lbrace #1 \right\rbrace}} % {#1}.
+  \newcommand{\gang}[1]{\ensuremath{\left\langle #1 \right\rangle}} % <#1>.
+  \newcommand{\ceil}[1]{\ensuremath{\left\lceil #1 \right\rceil}} % ceil{#1}.
+  \newcommand{\floor}[1]{\ensuremath{\left\lfloor #1 \right\rfloor}} % floor{#1}.
+  \newcommand{\ointer}[2]{\ensuremath{\left( #1,\ #2 \right)}} % (#1, #2).
+  \newcommand{\cinter}[2]{\ensuremath{\left[ #1,\ #2 \right]}} % [#1, #2].
+  \newcommand{\cointer}[2]{\ensuremath{\left[ #1,\ #2 \right)}} % [#1, #2).
+  \newcommand{\ocinter}[2]{\ensuremath{\left( #1,\ #2 \right]}} % (#1, #2].
+
+% Function Formatting Shortcuts.
+  \newcommand{\func}[2]{\ensuremath{#1 \left( #2 \right)}} % #1(#2).
+  \newcommand{\mapsby}[1]{\ensuremath{\xrightarrow[]{#1}}} % --#1-->.
+
+% Function Shortcuts.
+  % Matrix Functions
+    \renewcommand{\det}[1]{\ensuremath{\text{det}\left(#1\right)}} % det(A).
+    \renewcommand{\tr}[1]{\ensuremath{\text{tr}\left(#1\right)}} % tr(A).
+  % Analysis Functions.
+    \renewcommand{\liminf}{\ensuremath{\underline{\text{lim}}}} % __lim__.
+    \renewcommand{\limsup}{\ensuremath{\overline{\text{lim}}}} % --lim--.
+    \newcommand{\om}[1]{\ensuremath{m^{*}\left( #1 \right)}} % m*(#1).
+    \newcommand{\m}[1]{\ensuremath{m\left( #1 \right)}} % m(#1).
+    \renewcommand{\l}[1]{\ensuremath{l\left( #1 \right)}} % l(#1).
+  % Algebraic Topology Functions.
+    \newcommand{\fundgp}[1]{\ensuremath{\pi_1\left(#1\right)}} % pi_1(#1).
+    \newcommand{\homgp}[2]{\ensuremath{H_{#1}\left(#2\right)}} % H_#1(#2).
+    \newcommand{\redhomgp}[2]{\ensuremath{\widetilde{H}_{#1}\left(#2\right)}} % \~{H}_#1(#2).
+    \renewcommand{\hom}[2]{\ensuremath{\text{Hom}\left(#1, #2\right)}} % Hom(#1,#2).
+    \newcommand{\homr}[3]{\ensuremath{\text{Hom}_{#1}\left(#2, #3\right)}} % Hom(#1,#2).
+    \newcommand{\cochaingp}[3]{\ensuremath{\text{C}^{#1}\left(#2; #3\right)}} % C^#1(#2;#3).
+    \newcommand{\cohomgp}[3]{\ensuremath{\text{H}^{#1}\left(#2;#3\right)}} % H^#1(#2).
+    \newcommand{\redcohomgp}[3]{\ensuremath{\widetilde{\text{H}}^{#1}\left(#2; #3\right)}} % ~{H}^#1(#2;#3).
+    \newcommand{\ext}[3]{\ensuremath{\text{Ext}_{#1}^{#2}\left(#3\right)}} % ext_#1^#2(#3).
+  % Computational Mathematics Shortcuts.
+    \newcommand{\ord}[1]{\ensuremath{\mathcal{O}\left(#1\right)}} % O(#1).
+  % Fluid Dynamics Shortcuts.
+    \newcommand{\mdv}[1]{\ensuremath{\dfrac{\text{D}#1}{\text{D}t}}} %D#1/Dt.
+  % Statistics Shortcuts.
+    \renewcommand{\ev}[1]{\ensuremath{\text{E}\left[#1\right]}} %E[#1].
+    \newcommand{\vr}[1]{\ensuremath{\text{Var}\left(#1\right)}} %Var(#1).
+    \newcommand{\cov}[2]{\ensuremath{\text{Cov}\left(#1,\ #2\right)}} %Cov(#1, #2).
+  % Logic shortcuts.
+    \renewcommand{\iff}{\ensuremath{\Leftrightarrow}} % <==>.
+    \newcommand{\conv}{\ensuremath{\Leftarrow}} % <==.
+    \newcommand{\impl}{\ensuremath{\Rightarrow}} % ==>.
+
+% Set Symbol Shortcuts.
+  \newcommand{\N}{\ensuremath{\mathbb{N}}} % Naturals.
+  \newcommand{\Z}{\ensuremath{\mathbb{Z}}} % Integers.
+  \newcommand{\Q}{\ensuremath{\mathbb{Q}}} % Rationals.
+  \newcommand{\R}{\ensuremath{\mathbb{R}}} % Reals.
+  \newcommand{\C}{\ensuremath{\mathbb{C}}} % Complex Numbers.
+  \renewcommand{\H}{\ensuremath{\mathbb{H}}} % Quaternions.

@@ -1,0 +1,24 @@
+\section{1}
+
+\begin{enumerate}[(a)]
+	\item Prove the following result: For Gaussian variables
+	
+		\begin{equation}
+			\va{x} = \mqty[\va{x}_1 \\ \va{x}_2],\qquad \va{\mu} = \mqty[\va{\mu}_1 \\ \va{\mu}_2],\qquad \vb{R} = \mqty[\vb{R}_{11} & \vb{R}_{12} \\ \vb{R}_{21} & \vb{R}_{22}].
+		\end{equation}
+	
+		The conditional distribution $\func{p}{\va{x}_1\ \vert\ \va{x}_2}$ is normal with the following mean and covariance
+	
+		\begin{equation}
+			\overline{\va{\mu}} = \va{\mu}_1 + \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\gpr{\va{x}_2 - \va{\mu}_2},\qquad \overline{\vb{R}} = \vb{R}_{11} - \vb{R}_{12}\,\vb{R}_{22}^{-1}\,\vb{R}_{21}.
+		\end{equation}
+	
+	\item Let
+	
+			\begin{equation}
+				\va{x} = \mqty[x_1 \\ x_2],\qquad \va{\mu} = \mqty[0 \\ 0],\qquad \vb{R} = \mqty[1 & 0.5 \\ 0.5 & 1].
+			\end{equation}
+			
+			Generate $N$ random numbers from such a two-dimensional joint Gaussian distribution. Each random number has two components. Collect all of these points of $x_1$, where the corresponding $x_2$ satisfies $0.9 < x_2 < 1.1$. Use these $x_1$ to approximate $\func{p}{x_1\ \vert\ x_2 = 1}$. Show your codes and numerical results, with $N = 10^3$, $10^4$, and $10^5$. What is the $95\%$ confidence interval for the case with different $N$?
+\end{enumerate}
+
