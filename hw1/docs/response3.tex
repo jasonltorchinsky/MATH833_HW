@@ -1,1 +1,57 @@
 \textit{Response.} 
+
+To compute this integral, we consider it in the following form
+
+\begin{equation}
+	\int_{0}^{1} \int_{0}^{2} e^{x}\,y^{x}\,dy\,dx = 2\,\gpr{\frac{1}{2}\,\int_{0}^{1} \int_{0}^{2} e^{x}\,y^{x}\,dy\,dx} = 2\,\ev{\func{f}{X,\ Y}}
+\end{equation}
+
+where $\func{f}{x,\ y} = e^x\,y^x$, the expected value is with respect to both arguments of $f$, $X \sim \func{\text{Unif}}{0,\ 1}$, and $Y \sim \func{\text{Unif}}{0,\ 2}$. We may calculate the expected value on the right hand side numerically. That is, we may numerically generate samples $x$, $y$ of $X$, $Y$, calculate $\func{f}{x,\ y}$, and average all evaluations of $\func{f}{x,\ y}$.
+
+To obtain a specified error $\epsilon$, we must first calculate the probability distribution of the error. The true expected value of $\func{f}{X,\ Y}$ is given by
+
+\begin{equation}
+	\mu_f = \ev{\func{f}{X,\ Y}} = \func{f}{\ev{X},\ \ev{Y}} = \func{f}{0.5,\ 1} = \sqrt{e}.
+\end{equation}
+
+The expected value of the difference between $\mu_y$ and the sample mean $\overline{f} = \frac{1}{N^2}\,\sum_{i = 1}^{N}\,\sum_{j = 1}^{N} \func{f}{x_i,\ y_j} = \frac{1}{N^2}\,\sum_{i = 1}^{N}\,\sum_{j = 1}^{N} f_{ij}$ is zero
+
+\begin{equation}
+	\ev{\overline{f} - \mu_{f}} = \ev{\frac{1}{N^2}\,\sum_{i = 1}^{N} \sum_{j = 1}^{N} f_{ij}} - \mu_f = \frac{1}{N^2}\,\frac{1}{N^2}\,\sum_{i = 1}^{N} \sum_{j = 1}^{N} \ev{f_{ij}} - \mu_f = \frac{1}{N^2}\,\gpr{N^2\,\mu_f} - \mu_f = 0.
+\end{equation}
+
+The variance of the difference $\overline{f} - \mu_{f}$ is given by
+
+\begin{equation}
+	\vr{\overline{f} - \mu_y} = \vr{\overline{f}} - \vr{\mu_{f}} = \vr{\frac{1}{N^2}\,\sum_{i = 1}^{N} \sum_{j = 1}^{N} f_{ij}} = \frac{1}{N^4}\,\vr{\sum_{i = 1}^{N} \sum_{j = 1}^{N} f_{ij}}.
+\end{equation}
+
+As our samples are independent, the variance of their sum is the sum of their variances
+
+\begin{equation}
+	\vr{\overline{f} - \mu_y} = \frac{1}{N^4}\,\sum_{i = 1}^{N} \sum_{j = 1}^{N} \vr{f_{ij}} = \frac{\sigma_{f}^2}{N^2},
+\end{equation}
+
+where $\sigma_f^2$ is the true variance of $\func{f}{X,\ Y}$. By the Law of Large Numbers, we therefore have
+
+\begin{equation}
+	f_{ij} \sim \func{\mathcal{N}}{0,\ \sigma_{\overline{f}}^2} = \func{\mathcal{N}}{0,\ \frac{\sigma_{f}^2}{N^2}}.
+\end{equation}
+
+Hence, the number of samples required for a given error is
+
+\begin{equation}
+	\abs{\epsilon} = \frac{\sigma_f}{N} \impl N = \ceil{\abs{\epsilon}^{-1}\,\sigma_f}.
+\end{equation}
+
+However, we must use a numerical estimate for $\sigma_f$ since the true value is unavailable. Using NumPy, we estimate the true variance to be $0.824955$. Therefore, for $\epsilon = \pm 0.05$ we require $N = 17$ samples.
+
+Source code is available from the GitHub repository
+	
+\begin{center}
+	\url{https://github.com/jasonltorchinsky/MATH833_HW}
+\end{center}
+
+In short, the code takes in an input parameter \texttt{-{}-tol} (or \texttt{-t}, short for `tolerance') to use for $\epsilon$. It then generates $N = 17$ samples from two uniform distributions corresponding to $X$ and $Y$ using NumPy's \texttt{uniform} function. We then find the mean of these samples and multiply the mean by two to obtain our final numerical estimate. The code also cacluates the integral numerically using SciPy's \texttt{simps} function.
+
+Although the results of any given run vary, the average result across 1000 runs for $\epsilon = 17$ is $3.303$. This should be compared to $3.307$, which is the result obtained via \texttt{simps}.

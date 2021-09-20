@@ -40,23 +40,34 @@ def main(argv):
            "Conditional distribution analytic variance is {:6.4}.\n")
           .format(truMu, truR))
 
-    # Get samples from joint, conditional distribution
-    samps = np.random.default_rng().multivariate_normal(mu, R, N)
+    # Repeat this Monte Carlo calculation a whole lot
+    ntrials = 1000
+    results = np.zeros([ntrials, 3]) # mean, variance, number of valid samples
+    for trial in range(ntrials):
+        # Get samples from joint, conditional distribution
+        samps = np.random.default_rng().multivariate_normal(mu, R, N)
+        
+        condMask = (samps[:, 1] > 0.9) & (samps[:, 1] < 1.1)
+        condSamps = samps[condMask, :]
 
-    condMask = (samps[:, 1] > 0.9) & (samps[:, 1] < 1.1)
-    condSamps = samps[condMask, :]
+        # Get stats from conditional distribution
+        condMu = np.mean(condSamps[:, 0])
+        condR  = np.var(condSamps[:,0])
+        condN = np.size(condSamps[:,0])
 
-    # Get stats from conditional distribution
-    condMu = np.mean(condSamps[:, 0])
-    condR  = np.var(condSamps[:,0])
+        results[trial,:] = [condMu, condR, condN]
 
+
+    condMu = np.mean(results[:,0])
+    condR  = np.var(results[:,1])
+    condN  = np.mean(results[:,2])
+    
     print(("Conditional distribution numerical mean is {:6.4}.\n"
            "Conditional distribution numerical variance is {:6.4}.\n")
           .format(condMu, condR))
 
     # Calculate confidence interval
-    condN = np.size(condSamps[:,0])
-    conf = 1.96 * condR / np.sqrt(condN)
+    conf = 1.96 * np.sqrt(condR / condN)
     confInt  = np.array([condMu - conf, condMu + conf])
     
     print(("Conditional distribution numerical confidence interval is "

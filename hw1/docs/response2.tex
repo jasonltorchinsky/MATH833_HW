@@ -1,1 +1,15 @@
 \textit{Response.} 
+
+Consider the joint distribution
+
+\begin{equation}
+	\func{p}{x,\ y} = \func{p}{x}\,\func{p}{y} = \gpr{\frac{1}{\sqrt{2\,\pi}}\,e^{-\frac{1}{2}\,x^2}}\,\gpr{\frac{1}{\pi\,\gpr{y^2 + 1}}}
+\end{equation}
+
+which is the product of a standard normal distribution and a standard Cauchy distribution. The conditional distribution $\func{p}{x\ \vert\ y}$ is Gaussian, and may be calculated by Bayes' theorem
+
+\begin{equation}
+	\func{p}{x\ \vert\ y} = \frac{\func{p}{x,\ y}}{\func{p}{y}} = \frac{1}{\sqrt{2\,\pi}}\,e^{-\frac{1}{2}\,x^2}.
+\end{equation}
+	
+The joint distribution $\func{p}{x,\ y}$ is clearly non-Gaussian.

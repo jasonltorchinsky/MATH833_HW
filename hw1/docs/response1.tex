@@ -85,6 +85,33 @@ Therefore, Eqn.~\ref{eqn:pre_cond_dist} may be written in the form
 
 which implies the conditional distribution $\func{p}{\va{x}_{1}\ \vert\ \va{x}_2}$ is Gaussian with mean $\overline{\va{\mu}}$ and covariance $\overline{\vb{R}}$.
 
+	\item Source code is available from the GitHub repository
 	
+\begin{center}
+	\url{https://github.com/jasonltorchinsky/MATH833_HW}
+\end{center}
+
+	In short, the code takes in an input parameter \texttt{-{}-N} (or \texttt{-n}) to use for $N$. It then generates $N$ samples from a two-dimensional joint Gaussian distribution with the above mean and covariances using NumPy's \texttt{multivariate\_normal} function. Of these, we select the samples with $0.9 < x_2 < 1.1$ and report their mean and variance, along with the $95\%$ confidence interval given by
+	
+\begin{equation}
+	\gbkt{\widehat{X}_n - z_c\,\sqrt{\frac{s_n^2}{n}},\ \hat{X}_n + z_c\,\sqrt{\frac{s_n^2}{n}}}
+\end{equation}
+
+where $n$ is the number of samples from the conditional distribution, $\widehat{X}_n$ is the mean of the samples from the conditional distribution, $s_n^2$ is the varaince of the samples from the conditional distribution, and $z_c = 1.96$ corresponds to the $95\%$ confidence interval.
+
+Although the results of any given run vary, the results for a single run of the reported $N$ are given in Table~\ref{tbl:prob1_num_res}, and should be compared to the analytic mean $0.5$ and analytic variance $0.75$ of the conditional distribution.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular*}{\textwidth}{c| @{\extracolsep{\fill}}c @{\extracolsep{\fill}}c @{\extracolsep{\fill}}c}
+		\hline
+		$N$    & Numerical Mean & Numerical Variance & Confidence Interval \\ \hline
+		$10^3$ & 0.5786         & 0.7040             & $\gbkt{0.3680,\ 0.7891}$ \\
+		$10^4$ & 0.5209         & 0.6288             & $\gbkt{0.4505,\ 0.5914}$ \\
+		$10^5$ & 0.4979         & 0.7412             & $\gbkt{0.4737,\ 0.5220}$
+	\end{tabular*}
+	\caption{ Numerical results for Problem 1. }
+	\label{tbl:prob1_num_res}
+\end{table}
 
 \end{enumerate}
