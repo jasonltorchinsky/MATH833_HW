@@ -49,9 +49,9 @@ However, we must use a numerical estimate for $\sigma_f$ since the true value is
 Source code is available from the GitHub repository
 	
 \begin{center}
-	\url{https://github.com/jasonltorchinsky/MATH833_HW}
+	\url{https://github.com/jasonltorchinsky/MATH833_HW/releases/tag/hw1}
 \end{center}
 
-In short, the code takes in an input parameter \texttt{-{}-tol} (or \texttt{-t}, short for `tolerance') to use for $\epsilon$. It then generates $N = 17$ samples from two uniform distributions corresponding to $X$ and $Y$ using NumPy's \texttt{uniform} function. We then find the mean of these samples and multiply the mean by two to obtain our final numerical estimate. The code also cacluates the integral numerically using SciPy's \texttt{simps} function.
+and is given in Appendix~\ref{app:code_3}. In short, the code takes in an input parameter \texttt{-{}-tol} (or \texttt{-t}, short for `tolerance') to use for $\epsilon$. It then generates $N = 17$ samples from two uniform distributions corresponding to $X$ and $Y$ using NumPy's \texttt{uniform} function. We then find the mean of these samples and multiply the mean by two to obtain our final numerical estimate. The code also cacluates the integral numerically using SciPy's \texttt{simps} function.
 
 Although the results of any given run vary, the average result across 1000 runs for $\abs{\epsilon} = 0.05$ is $3.303$. This should be compared to $3.307$, which is the result obtained via \texttt{simps}.

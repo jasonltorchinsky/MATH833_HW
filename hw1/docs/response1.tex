@@ -88,10 +88,10 @@ which implies the conditional distribution $\func{p}{\va{x}_{1}\ \vert\ \va{x}_2
 	\item Source code is available from the GitHub repository
 	
 \begin{center}
-	\url{https://github.com/jasonltorchinsky/MATH833_HW}
+	\url{https://github.com/jasonltorchinsky/MATH833_HW/releases/tag/hw1}
 \end{center}
 
-	In short, the code takes in an input parameter \texttt{-{}-N} (or \texttt{-n}) to use for $N$. It then generates $N$ samples from a two-dimensional joint Gaussian distribution with the above mean and covariances using NumPy's \texttt{multivariate\_normal} function. Of these, we select the samples with $0.9 < x_2 < 1.1$ and report their mean and variance, along with the $95\%$ confidence interval given by
+	and is given in Appendix~\ref{app:code_1}. In short, the code takes in an input parameter \texttt{-{}-N} (or \texttt{-n}) to use for $N$. It then generates $N$ samples from a two-dimensional joint Gaussian distribution with the above mean and covariances using NumPy's \texttt{multivariate\_normal} function. Of these, we select the samples with $0.9 < x_2 < 1.1$ and report their mean and variance, along with the $95\%$ confidence interval given by
 	
 \begin{equation}
 	\gbkt{\widehat{X}_n - z_c\,\sqrt{\frac{s_n^2}{n}},\ \hat{X}_n + z_c\,\sqrt{\frac{s_n^2}{n}}}
