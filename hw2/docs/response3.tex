@@ -1,15 +1,34 @@
 \textit{Response.} 
 
-We begin by solving the complex OU equation. In particular, we utilize the integration factor $e^{-\gpr{-a + i\,\omega}\,t}$:
+We begin by solving the complex OU equation. We shall utilize an integration factor $e^{\alpha\,t}$, and the value of $\alpha$ shall be determined later. Recall It\^{o}'s formula for the stochastic differential equation $dX_t = a_t\,dt + b_t\,dW_t$ and a function $\func{g}{t,\ x}$
 
-\begin{alignat}{2}
-	& & \dv{x}{t} &= \gpr{-a + i\,\omega}\,x + f + \sigma\,\func{\dot{W}}{t} \nonumber \\
-	\impl & & e^{-\gpr{-a + i\,\omega}\,t}\,\dv{x}{t} - \gpr{-a + i\,\omega}\,e^{-\gpr{-a + i\,\omega}\,t}\,x &= e^{-\gpr{-a + i\,\omega}\,t}\,f + \sigma\,e^{-\gpr{-a + i\,\omega}\,t}\,\func{\dot{W}}{t} \nonumber \\
-	\impl & & \dv{t}\gbkt{e^{-\gpr{-a + i\,\omega}\,t}\,x} &= e^{-\gpr{-a + i\,\omega}\,t}\,f + \sigma\,e^{-\gpr{-a + i\,\omega}\,t}\,\func{\dot{W}}{t} \nonumber \\
-	\impl & & e^{-\gpr{-a + i\,\omega}\,t}\,\func{x}{t} - \func{x}{0} &= \int_{0}^{t} e^{-\gpr{-a + i\,\omega}\,s}\,\func{f}{s}\,ds + \sigma\,\int_{0}^{t} e^{-\gpr{-a + i\,\omega}\,s}\,d\func{W}{s} \nonumber \\
-	\impl & & \func{x}{t} &= e^{\gpr{-a + i\,\omega}\,t}\,\func{x}{0} + \int_{0}^{t} e^{\gpr{-a + i\,\omega}\,\gpr{t - s}}\,\func{f}{s}\,ds \nonumber \\
-	& & &\qquad + \sigma\,\int_{0}^{t} e^{\gpr{-a + i\,\omega}\,\gpr{t - s}}\,d\func{W}{s}.
-\end{alignat}
+\begin{equation}
+	dg = \gpr{\pdv{g}{t} + a_t\,\pdv{g}{x} + \frac{b_t^2}{2}\,\pdv[2]{g}{x}}\,dt + b_t\,\pdv{g}{x}\,dW_t.
+\end{equation}
+
+We define $\func{g}{t,\ x} = e^{\alpha\,t}\,x$ and calculate the following
+
+\begin{equation}
+	dg = \gpr{\alpha\,e^{\alpha\,x}\,x + e^{\alpha\,t}\,\gpr{\gpr{-a + i\,\omega}\,x + f} + 0}\,dt + \sigma\,e^{\alpha\,t}\,dW
+\end{equation}
+
+Choosing $\alpha = a - i\,\omega$, this reduces to
+
+\begin{equation}
+	dg = f\,e^{\alpha\,t}\,dt + \sigma\,e^{\alpha\,t}\,dW
+\end{equation}
+
+which we may integrate from time $0$ to $t$ to obtain
+
+\begin{equation}
+	\func{g}{t,\ x} - \func{g}{0,\ x} = \int_{0}^{t} f\,e^{-\gpr{-a + i\,\omega}\,s}\,ds + \sigma\,\int_{0}^{t} e^{-\gpr{-a + i\,\omega}\,s}\,d\func{W}{s}.
+\end{equation}
+
+Evaluating the terms on the left-hand side and rearranging, we obtain
+
+\begin{equation}
+	\func{x}{t} = e^{\gpr{-a + i\,\omega}\,t}\,\func{x}{0} + \int_{0}^{t} e^{\gpr{-a + i\,\omega}\,\gpr{t - s}}\,\func{f}{s}\,ds + \sigma\,\int_{0}^{t} e^{\gpr{-a + i\,\omega}\,\gpr{t - s}}\,d\func{W}{s}.
+\end{equation}
 
 To obtain the expected value $\func{x}{t}$, we must calculate the expected value of each term on the right-hand side. The first term contains only one random part, being $\func{x}{0}$, and so its expected value is straightforward. The second term is entirely determinisitc, and therefore is equal to its expected value. To calculate the expected value of the third term on the right, we appeal to the second identity given in slide 6 of Lecture 3:
 
