@@ -4,7 +4,8 @@
 	\item Consider the two-state Markov jump process with state space $\mathcal{S} = \gbrc{s_{st},\ s_{un}}$ and switching rates $\nu: s_{st} \to s_{un}$, and $\mu: s_{un} \to s_{st}$. Show that the switching times and expected values are given by
 		\begin{subequations}
 			\begin{equation}
-				\func{P}{T_{st} \leq t} = 1 - e^{\nu\,t},\qquad \func{P}{T_{un} \leq t} = 1 - e^{\mu\,t},
+				\func{P}{T_{st} \leq t} = 1 - e^{-\nu\,t},\qquad \func{P}{T_{un} \leq t} = 1 - e^{-\mu\,t},
+				\label{eqs:switching_times}
 			\end{equation}
 			\begin{equation}
 				\ev{X} = \frac{\nu\,s_{un} + \mu\,s_{st}}{\nu + \mu}.

@@ -38,7 +38,7 @@ def main(argv):
     print(("Starting Problem 1 with N = {:8}.\n").format(n))
             
     # Set initial condition and transition matrix
-    rng = default_rng()
+    rng = default_rng(1)
     P = np.asarray([[0.0    , 1.0/3.0, 2.0/3.0],
                     [1.0/2.0, 1.0/2.0, 0.0    ],
                     [1.0/4.0, 1.0/2.0, 1.0/4.0]])
