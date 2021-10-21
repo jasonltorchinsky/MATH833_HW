@@ -1,0 +1,18 @@
+\section{6}
+
+Consider the following stochastic differential equation
+
+\begin{equation}
+	dx = \gpr{F + a\,x + b\,x^2 - c\,x^3}\,dt + \gpr{A - B\,x}\,dW + \sigma\,d{W_{A}},
+	\label{eqn:model_6}
+\end{equation}
+
+where all parameters are constant.
+
+\begin{enumerate}[a)]
+	\item Derive the time evolutions of the mean and variance using the quasi-Gaussian closure approximation. Here, the quasi-Gaussian closure approximation assumes all odd-order central moments (excluding the mean) are zero, while all even-order central moments can be repesented by the variance. The relationship of the latter can be established based on the Gaussian distribution.
+	
+	\item Tune the parameter values such that the equilibrium distribution of Eqn.~\ref{eqn:model_6} is bimodal. Show your parameter values, a realization of the model simulation, and the equilibrium distribution together with the Gaussian fit.
+	
+	\item Compare the time evolutions of the mean and variance using the method derived from part a) and using a Monte Carlo simulation. The initial values come from a Gaussian distribution $\func{\mathcal{N}}{10,\ 9}$ with mean 10 and variance 9.
+\end{enumerate}

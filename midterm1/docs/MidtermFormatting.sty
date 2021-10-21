@@ -1,0 +1,99 @@
+\ProvidesPackage{MidtermFormatting}
+
+%Page formatting
+\usepackage[margin = 1in]{geometry}
+
+% Translates standard inputs, such as accents
+\usepackage[utf8]{inputenc}
+
+% Enables figures and wrapped figures
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+% All imported packages
+\usepackage{alltt}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{bigstrut}
+\usepackage{braket}
+\usepackage{comment}
+\usepackage{enumerate}
+\usepackage{eucal}
+\usepackage{fancyhdr}
+\usepackage{float}
+\usepackage{footmisc}
+\usepackage{gensymb}
+\usepackage{hyperref}
+\usepackage{import}
+\usepackage{lastpage}
+\usepackage{listings}
+\usepackage{nicefrac}
+\usepackage{mathrsfs}
+\usepackage{pdfpages}
+\usepackage{physics}
+\usepackage{ragged2e}
+\usepackage{soul}
+\usepackage{stix}
+\usepackage{subcaption}
+\usepackage{times}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{xcolor}
+
+% Defines new ``Theorem'' types, such as proposition and corollary, and styles them all as definitions.
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{Rule}[theorem]{Rule}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}{Example}[section]
+
+\newtheorem*{remark}{Remark}
+\newtheorem*{note}{Note}
+\newtheorem*{recall}{Recall}
+
+% The general page style.
+\pagestyle{fancyplain}
+\fancyhead[L]{Jason Torchinsky}
+\fancyhead[R]{University of Wisconsin-Madison}
+\fancyfoot[C]{}
+\fancyfoot[R]{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+
+% Makes \par skip a line and not indent new paragraphs.
+\setlength{\parindent}{0cm}
+\setlength{\parskip}{1em}
+
+\setlength{\headheight}{14.5pt}
+
+\titleformat{\section} % Partition to be formatted
+[block] % Shape
+{\bfseries\large} % Format
+{Problem } % Label
+{0pt} % Separation between label and title body
+{} % Code preceding title body
+[] % Code following title body
+
+\titlespacing*{\section} % Command
+{0pt} % Left margin
+{6pt} % Vertical space before title
+{-6pt} % Vertical space after title
+[0pt] % Right margin
+
+% The title to be places at the top of the front page
+\newcommand{\heading}[3]{\begin{center}\huge{Midterm} \\ \normalsize{#1 \\ #2 - #3} \end{center} \vspace{-24pt}}
+
+% Makes a black square at the end of proofs.
+\renewcommand{\qedsymbol}{$\blacksquare$}
+
+% Format hyperlinks included in text.
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+}
+
+\urlstyle{same}
