@@ -1,15 +1,39 @@
 \textit{Response.}
 
 \begin{enumerate}[a)]
-	\item Not sure, probably involves the definition
-		\begin{equation}
-			\int_{y \in Y} \func{p}{x\ \vert\ y'}\,dy' = \func{p}{x}
-		\end{equation}
-		
-		I'd guess true?
-		
-	\item I think so, depending on the kurtosis of a normal distribution, since this is a non-linear SDE.
+	\item \textbf{True.} We begin by noting that the function $\gpr{x - \mu}^2\,\func{p}{x\ \vert\ y}$ is non-negative for all $x$, where $\mu$ is the mean of $\func{p}{x}$. We therefore have
 	
-	\item Can be less than or equal, since strong covergence is a stronger property than weak convergence.
+	\begin{align}
+		\vr{x} &= \int_{-\infty}^{\infty} \gpr{x - \mu}^2\,\func{p}{x}\,dx \nonumber \\
+			&= \int_{-\infty}^{\infty} \gpr{x - \mu}^2\,\gbkt{\int_{-\infty}^{\infty} \func{p}{x\ \vert\ y}\,dy}\,dx \nonumber \\
+			&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \gpr{x - \mu}^2\,\func{p}{x\ \vert\ y}\,dx\,dy \nonumber \\
+			&\geq \int_{-\infty}^{\infty} \gpr{x - \mu}^2\,\func{p}{x\ \vert\ y}\,dx \nonumber \\
+			&\geq \vr{\func{p}{x\ \vert\ y}}
+	\end{align}
+	
+	where the inequality arises from the fact that $\int_{-\infty}^{\infty} \func{f}{x}\,dx \geq \func{f}{x}$ if is non-negative $\func{f}{x}$ for all $x$.
+	
+	Therefore, the statement is true.
+		
+	\item \textbf{False.} The equilibrium distribution of the given stochastic differential equation is given by
+	
+	\begin{equation}
+		\func{p_{eq}}{x} = \mathcal{C}\,e^{\frac{2}{\sigma^2}\,\gpr{F\,x + \frac{a}{2}\,x^2 + \frac{b}{3}\,x^3 - \frac{c}{4}\,x^4}}
+	\end{equation}
+	
+	where $\mathcal{C}$ is a normalization constant to ensure $\int_{\mathbb{R}} \func{p_{eq}}{x}\,dx = 1$. The focus of our response is the logarithm of this distribution when compared to the logarithm of the standard normal distribution
+	
+	\begin{subequations}
+		\begin{equation}
+			\func{\log}{\func{p_{eq}}{x}} = \func{\log}{\mathcal{C}} + \frac{2}{\sigma^2}\,\gpr{F\,x + \frac{a}{2}\,x^2 + \frac{b}{3}\,x^3 - \frac{c}{4}\,x^4},
+		\end{equation}
+		\begin{equation}
+			\func{\log}{\func{\mathcal{N}}{x;\ \mu,\ \sigma}} = \func{\log}{\mathcal{C}_{\mathcal{N}}} - \frac{1}{2\,\sigma^2}\,\gpr{x - \mu}^2.
+		\end{equation}
+	\end{subequations}
+		
+	Kurtosis is characterized by the fatness of the tails of the distribution. In other words, if $\func{\log}{\func{p_{eq}}{x}} > \func{\log}{\func{\mathcal{N}}{x;\ \mu,\ \sigma}}$ for large $x$ (positive or negative), then we may suspect that the Kurtosis of $\func{p_{eq}}{x}$ is greater than that of a normal distribution (which is always three). However, for non-zero $c$, $\func{\log}{\func{p_{eq}}{x}}$ behaves like $-x^4$ for large $x$ while $\func{\log}{\func{\mathcal{N}}{x;\ \mu,\ \sigma}}$ behaves like $-x^2$ for large $x$. Therefore, we expect the tails of $\func{p_{eq}}{x}$ to be thinner than the tails of a normal distribution, and will not have excess kurtosis. Therefore, the kurtosis cannot exceed three.
+	
+	\item \textbf{False.} Strong convergence is a `stricter' property than weak convergence, that is, the order of strong convergence is a lower bound for the order of weak convergence. However, a method can have the same order of strong convergence and weak convergence, such as the Milstein method which has a strong and weak order of one. Therefore, the order of strong convergence is not always less than that of weak convergence.
 \end{enumerate}
 

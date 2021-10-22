@@ -1,14 +1,31 @@
 \textit{Response.}
 
-We begin by noting that an equilibrium distribution may not exist for a given flow field. For example, consider the flow field $\func{\va{v}}{t,\ x} = \mqty[1 & 0]$ and the initial distribution of all particles on the $y$-axis. The mean of the distribution is given by
+For the sake of simplicity, we consider the case of zero underlying flow and all tracers beginning at the point $\gpr{\pi,\ \pi}$ in the plane. As time progresses, each tracers undergoes a random walk, and the distribution of tracers from the original approaches a normal distribution with mean $\pi$ and variance $t$ in both the $x$- and $y$-directions.
+
+However, from the doubly-periodic domain we actually have collections of tracers at the point $\gpr{\gpr{2\,i+1}\,\pi,\ \gpr{2\,j+1}\,\pi}$ for $i,\ j = \dots,\ -2,\ -1,\ 0,\ 1,\ 2,\ \dots$, and the distribution of each collection of tracers each approach a normal distribution with mean $\pi$ and variance $t$ in both the $x$- and $y$-directions. As such, each time a tracer leaves one $\ocinter{0}{2\,\pi} \times \ocinter{0}{2\,\pi}$ region of the plane we expect another tracer to enter said region of the plane. We therefore expect the equilibrum distribution of all tracers to be uniform across the plane.
+
+An alternative way to picture this scenario is as a heat\footnote{This `heat' may be thought of as an un-normalized probability density function.} diffusion process in which the initial condition is a Dirac delta function of heat at each point $\gpr{\gpr{2\,i+1}\,\pi,\ \gpr{2\,j+1}\,\pi}$ in the plane, which is the limit of infinitely many tracers. As time progresses, heat diffuses radially outward from each peak, eventually meeting heat that began in neighboring peaks. In the limit as $t$ goes to infinity, heat becomes equally distributed across the entire plane.
+
+Continuing this alternative visualization of this scenario as a heat diffusion process, we can imagine a non-zero underlying flow field as a heat advection-diffusion process. Since this underlying flow is incompressible, the heat is advected exactly along streamlines and diffusion acts as the sole mechanism for transporting heat between streamlines. 
+
+The Fokker-Planck equation for this system is given by
 
 \begin{equation}
-	d\gang{\va{x}_i } = \gang{\mqty[1 & 0]}\,dt \impl \gang{\va{x}_i} = \mqty[\func{\text{mod}}{t,\ 2\,\pi} & 0]
+	\pdv{p}{t} = -\gpr{\pdv{x}\gbkt{u\,p} + \pdv{y}\gbkt{v\,p}} + \frac{1}{2}\,\sigma^2\,\gpr{\pdv[2]{p}{x} + \pdv[2]{p}{y}}
 \end{equation}
 
-In the limit as $t \to \infty$, this distribution does not converge.
+where $\va{v} = \mqty[u & v]$. From incompressibility of the underlying flow, we may simplify and rearrange this equation
 
-More generally, 
+\begin{equation}
+	\pdv{p}{t} + u\,\pdv{p}{x} + v\,\pdv{p}{x} = \frac{1}{2}\,\sigma^2\,\gpr{\pdv[2]{p}{x} + \pdv[2]{p}{y}}.
+\end{equation}
 
-considering the case of no stochastic forcing, i.e., $\sigma = 0$. In this case, each particle moves along the streamline on which it initially lies. Thus, from the double-periodicity of the domain and underlying flow field, 
+For an equilibrium distribution to exist, the underlying flow must approach some bounded function $\va{v}_{\infty} = \mqty[u_{\infty} & v_{\infty}]$ as $t \to \infty$. With this assumption, the equilibrium distribution solves the following PDE
 
+\begin{equation}
+	u_{\infty}\,\pdv{p_{eq}}{x} + v_{\infty}\,\pdv{p_{eq}}{y} = \frac{1}{2}\,\sigma^2\,\gpr{\pdv[2]{p_{eq}}{x} + \pdv[2]{p_{eq}}{y}}.
+\end{equation}
+
+This PDE is surprisingly difficult to solve analytically. Even if we utilize a separation of variables decomposition of $\func{p_{eq}}{x,\ y}$, the velocities $\func{u_{\infty}}{x,\ y}$ and $\func{v_{\infty}}{x,\ y}$ are allowed to be arbitrary bounded functions of $x$ and $y$.
+
+Clearly, a constant $p_{eq}$ is a solution to this PDE, which corresponds to an un-normalized uniform distribution.

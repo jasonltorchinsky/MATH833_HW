@@ -1,3 +1,20 @@
 \textit{Response.}
 
-No, need decorrelation time as well.
+A real-valued Ornstein-Uhlenbeck (OU) process is uniquely determined by three parameters: the mean and variance of the equilibrium distribution, as well as the correlation time. This may be seen by examining the stochastic differential equation for the OU process as well as the mean and variance of its equilibrium distribution. In particular, the OU prcoess is given by the following stochastic differential equation (SDE)
+
+\begin{equation}
+	dx = \gpr{-a\,x + f}\,dt + \sigma\,dW,
+\end{equation}
+
+where $a$, $f$, and $\sigma$ are constants. These three parameters are necessary to define the SDE, and thus we expect three pieces of information to be required to uniquely determine the OU process. The mean and variance of the equilibrium distribution are given by
+
+\begin{subequations}
+	\begin{equation}
+		\gang{x}_{\infty} = \frac{f}{a},
+	\end{equation}
+	\begin{equation}
+		\vr{x}_{\infty} = \frac{\sigma^2}{2\,a},
+	\end{equation}
+\end{subequations}
+
+which account for two out of three of the aforementioned parameters. The third piece of information needed is the decorrelation time $\tau_{corr}$, defined as $1/a$.

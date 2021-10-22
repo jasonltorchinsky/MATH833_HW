@@ -1,7 +1,7 @@
 \textit{Response.}
 
-Large variance - will struggle to converge to a single error.
+The proposal function in the Markov Chain Monte Carlo (MCMC) algorithm is fundamental to the performance of the algorithm. Although MCMC is different from a gradient descent algorithm, it similarly seeks the extrema of a function, in this case the extrema of the proposal function.
 
-Small variance - will struggle to find the best answer, will get stuck.
+When discussing the variance of the proposal function, it is easier to imagine its `local flatness', i.e., the variance of the proposal function in some subset of the domain. A function that is very `locally flat' has a large variance on the subset of interest of the domain, and the algorithm may srtruggle to converge to an answer quickly, if at all. A function that is not `locally flat' has a small variance on the subset of interest of the domain, and the algorithm may quickly converge to an answer, but may get `stuck' and not find the `best' answer
 
  

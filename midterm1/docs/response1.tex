@@ -1,3 +1,53 @@
 \textit{Response.}
 
-No, start with a non-Gaussian distribution.
+A linear stochastic differential equation (SDE) may have a non-Gaussian distribution if the distribution of the state variable does starts in a non-Gaussian distribution. However, consider a general linear SDE
+
+\begin{equation}
+	dx = \func{a}{t,\ x}\,dt + \func{b}{t,\ x}\,dW
+	\label{eqn:lin_sde}
+\end{equation}
+
+where
+
+\begin{subequations}
+	\begin{equation}
+		\func{a}{t,\ x} = \func{f}{t}\,x + \func{g}{t},
+	\end{equation}
+	\begin{equation}
+		\func{b}{t,\ x} = \func{q}{t}\,x + \func{r}{t}.
+	\end{equation}
+\end{subequations}
+
+The associated Fokker-Planck equation is
+
+\begin{equation}
+	\pdv{p}{t} = -\pdv{x}\gbkt{\func{a}{t,\ x}\,\func{p}{t,\ x}} + \frac{1}{2}\,\pdv[2]{x}\gbkt{\gpr{\func{b}{t,\ x}}^2\,\func{p}{t,\ x}}.
+\end{equation}
+
+The stationary solutions must then satisfy
+
+\begin{equation}
+	-\func{a_{\infty}}{x}\,\func{p_{eq}}{x} + \frac{1}{2}\,\pdv{x}\gbkt{\gpr{\func{b_{\infty}}{x}}^2\,\func{p_{eq}}{x}} = 0,
+\end{equation}
+
+where the equality to zero comes from the boundary conditions of $p$ and $\partial_x p$ as $x \to \pm \infty$, and we have assumed the existence of the limits $\lim_{t \to \infty} \func{a}{t,\ x} = \func{a_{\infty}}{x}$ and $\lim_{t \to \infty} \func{b}{t,\ x} = \func{b_{\infty}}{x}$. Away from the (possible) root of $\func{b_{\infty}}{x}$, we may simplify further to obtain
+
+\begin{equation}
+	\pdv{p_{eq}}{x} = \gpr{\frac{q_{\infty}\,\func{b_{\infty}}{x} - \func{a_{\infty}}{x}}{\gpr{\func{b_{\infty}}{x}}^2}}\,\func{p_{eq}}{x},
+\end{equation}
+
+where $q_{\infty} = \lim_{t \to \infty} \func{q}{t}$. In the case that $q_{\infty} = 0$, i.e., $\func{b_{eq}}{x} = r_{\infty} \neq 0$ is constant, and assuming $\lim_{t \to \infty} \func{f}{t} = f_{\infty} \neq 0$, we have
+
+\begin{equation}
+	\func{p_{eq}}{x} = N_0\,\func{\text{Exp}}{-\frac{f_{\infty}}{2\,r_{\infty}^2}\,\gpr{x + \frac{g_{\infty}}{f_{\infty}}}^2 + \frac{g_{\infty}^2}{2\,f_{\infty}\,r_{\infty}^2}},
+\end{equation}
+
+where $N_0$ is the appropriate normalization constant. This equilibrium distribution is indeed Gaussian so long as $f_{\infty} < 0$. If $f_{\infty} > 0$, then this function is unbounded, and no choice of $N_0$ can result in $\func{p_{eq}}{x}$ integrating to one. In the case that $q_{\infty} \neq 0$, we have
+
+\begin{equation}
+	\func{p_{eq}}{x} = N_0\,\func{\text{Exp}}{\frac{1}{q_{\infty}^2}\,\gpr{\frac{g_{\infty}\,q_{\infty} - f_{\infty}\,r_{\infty}}{\func{b_{\infty}}{x}} + \gpr{q_{\infty}^2 - f}\,\func{\log}{\func{b_{\infty}}{x}}}},
+\end{equation}
+
+which is non-Gaussian. Further, since $q_{\infty} \neq 0$, this function is unbounded, and no choice of $N_0$ can result in $\func{p_{eq}}{x}$ integrating to one.
+
+Given this, we conclude that if the equilibrium distribution of Eqn.~\ref{eqn:lin_sde} exists, then it must be Gaussian.

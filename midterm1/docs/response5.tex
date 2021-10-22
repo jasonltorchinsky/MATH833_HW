@@ -1,4 +1,43 @@
 \textit{Response.}
 
-Want the determinstic part to decay like OU, but stochastic part to blow up.
+Consider the following SDE
+
+\begin{equation}
+	dx = -a\,x\,dt + t\,dW,
+\end{equation}
+
+where $x$ is real and $a >0$ is constant. The mean of $x$ changes according to
+
+\begin{equation}
+	d\gang{x} = -a\,\gang{x}\,dt,
+\end{equation}
+
+which we may solve analytically
+
+\begin{equation}
+	\gang{x} = \gang{x_0}\,e^{-a\,t}
+\end{equation}
+
+where $\gang{x_0}$ is the mean of the initial distribution of $x$. As $t \to \infty$, $\gang{x}$ decays to zero from any initial value.
+
+To calculate the variance, we first write the evolution of $x' = x - \gang{x}$
+
+\begin{equation}
+	dx' = -a\,x'\,dt + t\,dW,
+\end{equation}
+
+Using It\^{o}'s formula, we have
+
+\begin{align}
+	d\vr{x} &= d\gang{\gpr{x'}^2} = \gang{2\,x'\,dx'} + \gang{\gpr{dx'}^2} \nonumber \\
+		&= \gpr{-2\,a\,\gang{\gpr{x'}^2} + t^2}\,dt.
+\end{align}
+
+whose solution may be written explicitly
+
+\begin{equation}
+	\vr{x} = \gpr{\vr{x_0} - \frac{1}{4\,a^3}}\,e^{-2\,a\,t} + \frac{1 - 2\,a\,t + 2\,a^2\,t^2}{4\,a^3}.
+\end{equation}
+
+We may readily see that as $t \to \infty$, the variance goes like $t^2$ which is unbounded.
 
