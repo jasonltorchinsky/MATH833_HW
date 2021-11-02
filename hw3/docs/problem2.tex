@@ -1,0 +1,21 @@
+\section{2}
+
+Consider a one-dimensional linear model
+
+\begin{equation}
+	\dv{u}{t} = -a\,u + f + \sigma\,\dot{W},
+\end{equation}
+
+with $a = f = 1$, and $\sigma = 0.5$. Let the observational model be
+
+\begin{equation}
+	v = g\,u + \sigma^{o},
+\end{equation}
+
+where $\sigma^{o}$ is an independent zero-mean Gaussian random number at each observational time-instant. Let $g = 2$ and $\vr{\sigma^{o}} = \sqrt{0.2}$. Generate a time-series that has a length of 100 time-units with observation time-step size $\Delta t = 0.25$.
+
+\begin{enumerate}[a)]
+	\item Write down the standard Kalman filter to solve the posterior mean and posterior covariance.
+	
+	\item Write down a particle filter algorithm to solve the problem. Experiment with the number of particles in your simulation and explain if you need resampling.
+\end{enumerate}

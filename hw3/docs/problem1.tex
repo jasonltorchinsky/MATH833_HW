@@ -1,0 +1,36 @@
+\section{1}
+
+Consider a two-dimensional linear model
+
+\begin{subequations}
+	\begin{align}
+		\dv{u_1}{t} &= F_{11}\,u_1 + F_{12}\,u_2 + \sigma_1\,\dot{W}_1, \\
+		\dv{u_2}{t} &= F_{21}\,u_1 + F_{22}\,u_2 + \sigma_2\,\dot{W}_2, 
+	\end{align}
+\end{subequations}
+
+where $u_1$, $u_2$ are scalar state variables, and $\dot{W}_1$, $\dot{W}_2$ are independent white noise sources. The coefficients $F_{11}$, $F_{12}$, $F_{21}$, $F_{22}$, $\sigma_1$, and $\sigma_2$ are all constants.
+
+\begin{enumerate}[a)]
+	\item Which condition(s) on $F_{11}$, $F_{12}$, $F_{21}$, and $F_{22}$ should be satisified such that the eqilibrium distribution of the system exists?
+	
+	\item Let $F_{11} = F_{22} = -1$, $F_{12} = -F_{21} = 0.5$, $\sigma_1 = 0.2$, and $\sigma_2 = 0.5$. From the initial condition $\func{u_1}{0} = \func{u_2}{0} = 0.5$, generate a time-series that has a length of 100 time-units.
+	
+	\item The observational model is given by
+	
+	\begin{subequations}
+		\begin{align}
+			v_1 &= g_1\,u_1 + \sigma_1^{o}, \\
+			v_2 &= g_2\,u_2 + \sigma_2^{o},
+		\end{align}
+	\end{subequations}
+	
+	where $\sigma_1^{o}$, $\sigma_2^{o}$ are independent zero-mean Gaussian random numbers at each observational time-instant. With $g_1 = g_2 = 2$, $\vr{\sigma_1^{o}} = \vr{\sigma_2^{o}} = \sqrt{0.2}$, and the observation time-step size is $\Delta t = 0.25$, write a code for the Kalman filter where the terue signal comes from the result in part b).
+	
+	Plot the posterior mean and posterior variance of both $v_1$ and $v_2$, comparing them with the prior mean and prior variance. You may compute the root-mean-square error between the true signal and the posterior/prior mean time-series. You may also compute the pattern correlation between the true signal and the posterior/prior mean tmie-series.
+	
+	\item Repeat part c) instead using $g_2 = 0$. What is the result of the Kalman filter?
+	
+	\item Repeat part d), except using $F_{12} = -F_{21} = 0.1$. What is the result of the Kalman filter? Compare the prior distribution and posterior distribution from this case to that of part d), and explain the role of $F_{12}$, $F_{21}$ in the Kalman filter.
+\end{enumerate}
+

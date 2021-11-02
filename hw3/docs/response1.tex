@@ -1,0 +1,67 @@
+\textit{Response.} 
+
+\begin{enumerate}[a)]
+	\item We begin by writing the model in matrix form
+	
+	\begin{equation}
+		\dv{\va{u}}{t} = \vb{F}\,\va{u} + \vb{\Sigma}\,\dot{\va{W}},
+	\end{equation}
+	
+	where
+	
+	\begin{equation}
+		\va{u} = \mqty[u_1 \\ u_2],\qquad \vb{F} = \mqty[F_{11} & F_{12} \\ F_{21} & F_{22}],\qquad \vb{\Sigma} = \mqty[\sigma_1 & 0 \\ 0 & \sigma_2],\qquad \dot{\va{W}} = \mqty[\dot{W}_1 \\ \dot{W}_{2}].
+	\end{equation}
+	
+	Since the model is linear with Gaussian noise, we know that the equilibrium distribution is a unique Gaussian. Hence, the equilibrium distribution is given by solving the equations
+
+	\begin{subequations}
+		\begin{equation}
+			\dv{\gang{\va{u}}_{eq}}{t} = 0,
+		\end{equation}
+		\begin{equation}
+			\dv{\cov{\va{u}}{\va{u}}_{eq}}{t} = 0.
+		\end{equation}	
+	\end{subequations}
+	
+	To examine the first of these equations, we note that we may write the solution to the differential equation for $\gang{\va{u}}$ explicitly
+	
+	\begin{equation}
+		\dv{\gang{\va{u}}}{t} = \vb{F}\,\gang{\va{u}} \qquad \impl \qquad \gang{\va{u}} = \vb{Q}\,\mqty[e^{\lambda_1\,t} & 0 \\ 0 & e^{\lambda_2\,t}]\,\vb{Q}^{-1}\,\gang{\va{u}}_0,
+	\end{equation}
+	
+	where $\vb{Q}$ is the eigenvector matrix of $\vb{F}$, $\lambda_1$ and $\lambda_2$ are the eigenvalues of $\vb{F}$, and $\gang{\va{u}}_0$ is the initial mean of $\va{u}$. Notice that we assumed $\vb{F}$ to be diagonalizable (to utilize the eigenvalue decomposition) and that the mean is finite for large $t$ if and only if the real part of the eigenvalues of $\vb{F}$ are non-positive. If the real part of $\lambda_1$ and $\lambda_2$ are zero and their imaginary part is non-zero, then $\gang{u_1}$ and $\gang{u_2}$ will forever oscillate and there will be no equilibrium mean. On the other hand, if the real part of $\lambda_1$ and $\lambda_2$ are negative then $\gang{u_1}$ and $\gang{u_2}$ will always decay toward zero and thus the equilibrium mean will exist.
+	
+	Now, to calculate the the equilibrium covariance it is easier to calculate the evolutions of $\vr{u_1}$, $\vr{u_2}$, and $\cov{u_1}{u_2}$ individually. We begin by stating the evolution of $\gang{u_1}$ and $\gang{u_2}$ in scalar form
+	
+	\begin{subequations}
+		\begin{equation}
+			d\gang{u_1} = \gpr{F_{11}\,\gang{u_1} + F_{12}\,\gang{u_2}}\,dt,
+		\end{equation}
+		\begin{equation}
+			d\gang{u_2} = \gpr{F_{21}\,\gang{u_1} + F_{22}\,\gang{u_2}}\,dt.
+		\end{equation}
+	\end{subequations}
+	
+	To calculate the scalar variances and covariance, we note It\^{o}'s formula for a multivariate scalar function
+	
+	\begin{equation}
+		d\func{f}{x,\ y} = \pdv{f}{x}\,dx + \pdv{f}{y}\,dy + \frac{1}{2}\,\gpr{\pdv[2]{f}{x}\,\gpr{dx}^2 + 2\,\pdv{f}{x}{y}\,dx\,dy + \pdv[2]{f}{y}\,\gpr{dy}^2}.
+	\end{equation}
+	
+	Specifically, for $\func{f}{u_1,\ u_2}$ we have
+	
+	\begin{align}
+		d\func{f}{u_1,\ u_2} &= \pdv{f}{u_1}\,du_1 + \pdv{f}{u_2}\,du_2 + \frac{1}{2}\,\gpr{\pdv[2]{f}{u_1}\,\gpr{du_1}^2 + 2\,\pdv{f}{u_1}{u_2}\,du_1\,du_2 + \pdv[2]{f}{u_2}\,\gpr{du_2}^2} \nonumber \\
+			&= \pdv{f}{u_1}\,\gpr{\gpr{F_{11}\,u_1 + F_{12}\,u_2}\,dt + \sigma_1\,dW_1} + \pdv{f}{u_2}\,\gpr{\gpr{F_{21}\,u_1 + F_{22}\,u_2}\,dt + \sigma_2\,dW_2} \nonumber \\
+				&\qquad + \frac{1}{2}\,\left( \pdv[2]{f}{u_1}\,\gpr{\gpr{F_{11}\,u_1 + F_{12}\,u_2}\,dt + \sigma_1\,dW_1}^2 \right. \nonumber \\
+				&\qquad\qquad \phantom{+ \frac{1}{2}} + \left. 2\,\pdv{f}{u_1}{u_2}\,\gpr{\gpr{F_{11}\,u_1 + F_{12}\,u_2}\,dt + \sigma_1\,dW_1} \right. \nonumber \\
+				&\qquad\qquad\qquad \phantom{+ \frac{1}{2}} \cdot \left. \gpr{\gpr{F_{21}\,u_1 + F_{22}\,u_2}\,dt + \sigma_2\,dW_2} \right. \nonumber \\
+				&\qquad\qquad \phantom{+ \frac{1}{2}} + \left. \pdv[2]{f}{u_2}\,\gpr{\gpr{F_{21}\,u_1 + F_{22}\,u_2}\,dt + \sigma_2\,dW_2}^2 \right) \nonumber \\
+			&= \gpr{\pdv{f}{u_1}\,\gpr{F_{11}\,u_1 + F_{12}\,u_2} + \pdv{f}{u_2}\,\gpr{F_{21}\,u_1 + F_{22}\,u_2} + \frac{1}{2}\,\gpr{\sigma_1^2\,\pdv[2]{f}{u_1} + \sigma_2^2\,\pdv[2]{f}{u_2}}}\,dt \nonumber \\
+			&\qquad + \sigma_1\,\sigma_2\,\pdv{f}{u_1}{u_2}\,dW_1\,dW_2 + \sigma_1\,\pdv{f}{u_1}\,dW_1 + \sigma_2\,\pdv{f}{u_2}\,dW_2
+	\end{align}
+	
+	where we have utilized the fact that $\gpr{dW_1}^2 = \gpr{dW_2}^2 = \func{o}{dt}$, and that $dt^2$, $dt\,dW_1$, and $dt\,dW_2$ go to zero faster than $dt$ in the limit $dt \to 0$.
+	
+\end{enumerate}
