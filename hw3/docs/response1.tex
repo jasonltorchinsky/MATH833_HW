@@ -164,4 +164,52 @@
 
 	and is given in Appendix~\ref{app:code_1b}. In short, the code takes a input parameters \texttt{-{-}F\_11}, \texttt{-{-}F\_12}, \texttt{-{-}F\_21}, \texttt{-{-}F\_12}, \texttt{-{-}sigma\_1}, and \texttt{-{-}sigma\_2} which correspond to $F_{11}$, $F_{12}$, $F_{21}$, $F_{22}$, $\sigma_1$, and $\sigma_2$, respectively. The code then calculates the equilibrium distribution from the analytic formulas derived in part a), simulates 500 indivual realizations of Eqs.~\ref{eqs:model_1} using the Euler--Maruyama method, and plots a single trajectory along with the statistics across all 500 realizations.
 	
+	\item We begin by rewriting the system model in a discretized form as a matrix equation
+	
+	\begin{equation}
+		\va{u}_{k+1} = \gpr{\vb{\mathcal{I}} + h\,\vb{F}}\,\va{u}_{k} + \sqrt{h}\,\vb{\Sigma}\,\va*{\xi}_{k+1}
+	\end{equation}		
+	
+	where $k$ indexes the time-step, $\vb{\mathcal{I}}$ is the identity matrix, $h$ is the time-step size (e.g., $h = 0.1$ in the realizations in part b))m and $\va*{\xi}_{k+1}$ is a vector of independent zero-mean unit-variance Gaussian noise.	We also write the observation model in discretized form as a matrix equation
+
+	\begin{equation}
+		\va{v}_{k+1} = \vb{G}\,\va{u} + \vb{\Sigma}^{o}\,\va*{\zeta}_{k+1}
+	\end{equation}
+		
+	where 
+	
+	\begin{equation}
+		\va{v} = \mqty[v_1 \\ v_2],\qquad \vb{G} = \mqty[g_1 & 0 \\ 0 & g_2],\qquad \vb{\Sigma}^{o} = \mqty[\sigma_1^{o} & 0 \\ 0 & \sigma_2^{o}],
+	\end{equation}
+	
+	and $\va*{\zeta}_{k+1}$ is a vector of independent zero-mean unit-variance Gaussian noise.
+	
+	The prior mean $\overline{\va{u}}_{k+1 \vert k}$ and prior covariance $\vb{\Sigma}_{k+1 \vert k}$ of the Kalman filter is given by
+	
+	\begin{subequations}
+		\begin{equation}
+			\overline{\va{u}}_{k+1 \vert k} = \gpr{\vb{\mathcal{I}} + h\,\vb{F}}\,\overline{\va{u}}_{k \vert k},
+		\end{equation}
+		\begin{equation}
+			\vb{\Sigma}_{k+1 \vert k} = \gpr{\vb{\mathcal{I}} + h\,\vb{F}}\,\vb{\Sigma}_{k \vert k}\,\gpr{\vb{\mathcal{I}} + h\,\vb{F}}^T + \vb{\Sigma},
+		\end{equation}
+	\end{subequations}
+	
+	and the posterior mean $\overline{\va{u}}_{k+1 \vert k+1}$ and posterior covariance $\vb{\Sigma}_{k+1 \vert k+1}$ of the Kalman filter is given by
+	
+	\begin{subequations}
+		\begin{equation}
+			\overline{\va{u}}_{k+1 \vert k+1} = \overline{\va{u}}_{k+1 \vert k} + \vb{K}_{k+1}\,\gpr{\va{v}_{k+1} - \vb{G}\,\overline{\va{u}}_{k+1 \vert k}},
+		\end{equation}
+		\begin{equation}
+			\vb{\Sigma}_{k+1 \vert k+1} = \gpr{\vb{\mathcal{I}} - \vb{K}_{k+1}\,\vb{G}}\,\vb{\Sigma}_{k+1 \vert k},
+		\end{equation}
+	\end{subequations}
+	
+	where $\vb{K}_{k+1}$ is the Kalman gain matrix
+	
+	\begin{equation}
+		\vb{K}_{k+1} = \vb{\Sigma}_{k+1 \vert k}\,\vb{G}^T\,\gpr{\vb{G}\,\vb{\Sigma}_{k+1 \vert k}\,\vb{G}^T + \vb{\Sigma}^{o}}^{-1}.
+	\end{equation}
+	
 \end{enumerate}

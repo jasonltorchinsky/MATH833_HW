@@ -1,5 +1,5 @@
 '''
-Solves problem 1b of problem set 3.
+Solves problem 1c of problem set 3.
 
 Author: Jason Torchinsky
 Date: November 3rd, 2021
@@ -23,19 +23,26 @@ def main(argv):
     F_22 = -1.0
     sigma_1 = 1.0
     sigma_2 = 1.0
-    
+    g_1 = 1.0
+    g_2 = 1.0
+    sigma_1o = 1.0
+    sigma_2o = 1.0
 
     helpStr = ("problem1.py --F_11 <F_11 parameter> --F_12 <F_12 parameter> "
                "--F_21 <F_21 parameter> --F_22 <F_22 parameter> "
                "--sigma_1 <sigma_1 parameter>  --sigma_2 <sigma_2 parameter>")
     try:
         # Dummy short names
-        opts, args = getopt.getopt(argv, "hq:w:e:r:t:y:", ['F_11=',
+        opts, args = getopt.getopt(argv, "hq:w:e:r:t:y:u:i:o:p:", ['F_11=',
                                                            'F_12=',
                                                            'F_21=',
                                                            'F_22=',
                                                            'sigma_1=',
-                                                           'sigma_2='])
+                                                           'sigma_2=',
+                                                           'g_1=',
+                                                           'g_2=',
+                                                           'sigma_1o=',
+                                                           'sigma_2o='])
     except getopt.GetoptError:
         print(helpStr)
         sys.exit(2)
@@ -56,20 +63,37 @@ def main(argv):
             sigma_1 = float(arg)
         elif opt in ('-y', '--sigma_2'):
             sigma_2 = float(arg)
+        elif opt in ('-u', '--g_1'):
+            g_1 = float(arg)
+        elif opt in ('-i', '--g_2'):
+            g_2 = float(arg)
+        elif opt in ('-o', '--sigma_1o'):
+            sigma_1o = float(arg)
+        elif opt in ('-o', '--sigma_2o'):
+            sigma_2o = float(arg)
 
     # Print startup message
     print(("Starting Problem 1 with:\n"
-           "  F_11    = {:.2f}.\n"
-           "  F_12    = {:.2f}.\n"
-           "  F_21    = {:.2f}.\n"
-           "  F_22    = {:.2f}.\n"
-           "  sigma_1 = {:.2f}.\n"
-           "  sigma_2 = {:.2f}.\n"
-           ).format(F_11, F_12, F_21, F_22, sigma_1, sigma_2))
+           "  F_11     = {:.2f}.\n"
+           "  F_12     = {:.2f}.\n"
+           "  F_21     = {:.2f}.\n"
+           "  F_22     = {:.2f}.\n"
+           "  sigma_1  = {:.2f}.\n"
+           "  sigma_2  = {:.2f}.\n"
+           "  g_1      = {:.2f}.\n"
+           "  g_2      = {:.2f}.\n"
+           "  sigma_1o = {:.2f}.\n"
+           "  sigma_2o = {:.2f}.\n"
+           ).format(F_11, F_12, F_21, F_22, sigma_1, sigma_2, g_1, g_2,
+                    sigma_1o, sigma_2o))
 
+    sys.exit(3)
+    
     # Set up matrices
     F = np.array([[F_11, F_12], [F_21, F_22]])
     Sigma = np.array([[sigma_1, 0], [0, sigma_2]])
+    G = np.array([[g_1, 0], [0, g_2]])
+    Sigma_o = np.array([[sigma_1o, 0], [0, sigma_2o]])
     
 
     ## Set up and plot the equilibrium PDF
@@ -112,20 +136,44 @@ def main(argv):
     t = np.arange(start_t, end_t + dt, dt)
     nsteps = np.size(t)
     
-    ntrials = 500
 
-    trials = np.zeros([ntrials, 2, nsteps]) # Trial, state variable (u_1, u_2),
-                                            # step
+    # Initialize model state and covariance
+    model_pst_mean = np.zeros([2, nsteps])
+    model_pst_cov  = np.zeros([2, 2, nsteps])
+    
+    model_pst_mean[0, 0] = 0.5
+    model_pst_mean[1, 0] = 0.5
+    model_pst_cov[0, 0, 0] = 0.2
+    model_pst_cov[1, 1, 0] = 0.5
+
+    model_pri_mean = model_pst_mean
+    model_pri_cov  = model_pst_cov
+    
 
     # Initial condition
     trials[:, 0, 0] = 0.5
     trials[:, 1, 0] = 0.5
 
-    for step in range(1, nsteps):
-        for trial in range(ntrials) :
-            trials[trial, :, step] = advance_state(rng, F, Sigma, dt,
-                                                   trials[trial, :, step-1])
+    # True state, observation of initial condition
+    true_state = np.zeros([2, nsteps])
+    true_state[0, 0] = 0.5
+    true_state[1, 0] = 0.5
 
+    obs = np.zeros([2, nsteps])
+    stoch = rng.standard_normal(obs[:, 0])
+    obs[:, 0] = G @ true_state + Sigma_o @ stoch
+
+    for step in range(1, nsteps):
+
+        # Calculate the prior stats and the true state
+        [model_pri_mean[:, step], model_pri_cov[:, step]] \
+            = filter_calc_pri(F, Sigma, dt,
+                              model_pst_mean[:,step-1],
+                              model_pst_cov[:,:,step-1])
+        true_state[:, step] = advance_truth(rng, F, Sigma, dt,
+                                            true_state[:, step-1])
+        
+        
     # Plot a single trial
     fig = plt.figure(constrained_layout=True)
     fig.set_size_inches(7.5, 3)
@@ -201,44 +249,8 @@ def main(argv):
     plot_file_name = '1b_ens_stats.png'
     plt.savefig(plot_file_name, dpi=300)
 
-def p_eq(F, Sigma, x, y):
 
-    
-    # Covariance of equil distribution, and its inverse
-    det_F = np.linalg.det(F)
-    tr_F  = np.trace(F)
-    cov = np.zeros([2, 2])
-    cov[0,0] = - (Sigma[0,0]**2 * (det_F + F[1,1]**2)
-                  + Sigma[1,1]**2 * F[0,1]**2) / (2 * tr_F * det_F)
-    cov[0,1] = (Sigma[0,0]**2 * F[1,0] * F[1,1]
-                + Sigma[1,1]**2 * F[0,0] * F[0,1]) / (2 * tr_F * det_F)
-    cov[1,0] = cov[0,1]
-    cov[1,1] = - (Sigma[0,0]**2 * F[1,0]**2
-                  + Sigma[1,1]**2 * (det_F + F[0,0]**2)) / (2 * tr_F * det_F)
-    
-    cov_inv = np.linalg.inv(cov)
-
-    # Normalization coefficient for PDF
-    norm = 1.0 / np.sqrt(2.0 * np.pi * np.linalg.det(cov))
-    
-    nx = np.size(x)
-    ny = np.size(y)
-
-    pdf_eq = np.zeros([nx, ny])
-
-    for x_idx in range(nx):
-        x_crd = x[x_idx]
-        for y_idx in range(ny):
-            y_crd = y[y_idx]
-            vec = np.array([[x_crd], [y_crd]])
-
-            # Mean is zero
-            pdf_eq[x_idx, y_idx] = norm \
-                * np.exp(-0.5 * np.transpose(vec) @ cov_inv @ vec)
-
-    return [cov, pdf_eq]
-
-def advance_state(rng, F, Sigma, dt, state):
+def advance_truth(rng, F, Sigma, dt, state):
 
     stoch = rng.standard_normal(np.size(state))
     
@@ -246,6 +258,15 @@ def advance_state(rng, F, Sigma, dt, state):
         + np.sqrt(dt) * Sigma @ stoch
     
     return state_out
+
+def filter_calc_pri(F, Sigma, dt, mean, cov):
+
+    coeff_mtx = np.identity([2, 2]) + dt * F
+
+    mean_out = coeff_mtx @ mean
+    cov_out = coeff_mtx @ cov @ np.tranpose(coeff_mtx) + Sigma
+
+    return [mean_out, cov_out]
 
 if __name__ == "__main__":
     main(sys.argv[1:])
