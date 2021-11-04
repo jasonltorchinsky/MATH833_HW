@@ -86,8 +86,6 @@ def main(argv):
            "  sigma_2o = {:.2f}.\n"
            ).format(F_11, F_12, F_21, F_22, sigma_1, sigma_2, g_1, g_2,
                     sigma_1o, sigma_2o))
-
-    sys.exit(3)
     
     # Set up matrices
     F = np.array([[F_11, F_12], [F_21, F_22]])
@@ -96,160 +94,266 @@ def main(argv):
     Sigma_o = np.array([[sigma_1o, 0], [0, sigma_2o]])
     
 
-    ## Set up and plot the equilibrium PDF
-    # Calculate the equilibrium PDF
-    x = np.linspace(-1, 1, 500, endpoint=True) # u_1
-    dx = x[1] - x[0]
-
-    y = np.linspace(-1, 1, 500, endpoint=True) # u_2
-    dy = y[1] - y[0]
+    ## Simulate trajectory of 100 time units
+    rng_model = default_rng(1)
+    rng_truth = default_rng(2)
+    rng_obs = default_rng(3)
     
-    [true_cov_mtx, pdf] = p_eq(F, Sigma, x, y)
-    pdf = pdf / np.sum((dx + dy) * pdf) # Normalize the PDF
 
-
-    # Plot the equilibrium PDF
-    fig = plt.figure(constrained_layout=True)
-    fig.set_size_inches(5, 4)
-
-    ax = fig.add_subplot()
-    cf = ax.contourf(x, y, pdf, levels=8, cmap='jet')
-
-    ax.set_title('Equilibrium PDF')
-    ax.set_xlabel(r'$u_1$')
-    ax.set_ylabel(r'$u_2$')
-
-    ax.set_aspect('equal', adjustable='box')
-
-    cb = plt.colorbar(cf)
-
-    # Save plot to file
-    plot_file_name = '1b_eq_pdf.png'
-    plt.savefig(plot_file_name, dpi=300)
-
-    ## Simulate trajectories of 100 time units
-    rng = default_rng(1)
-    
-    dt = 0.1
+    # Time-stepping for model
     start_t = 0.0
     end_t = 100.0
-    t = np.arange(start_t, end_t + dt, dt)
-    nsteps = np.size(t)
+
+    dt_model = 0.25
+    t_model = np.arange(start_t, end_t + dt_model, dt_model)
+    nsteps_model = np.size(t_model)
+
+    dt_obs = 0.25
+    t_obs = np.arange(start_t, end_t + dt_obs, dt_obs)
+    nsteps_obs = np.size(t_obs)
+
+    # To have different time-step sizes for obsevations and the models,
+    # We need to keep track of values for two time-series
+
+    # Prior stats and one copy of the truth signal
+    model_pri_mean = np.zeros([2,nsteps_model])
+    model_pri_cov  = np.zeros([2,2,nsteps_model])
+    
+    model_pri_mean[:,0]  = np.array([0.5,0.5])
+    model_pri_cov[:,:,0] = np.array([[0.2,0.0],[0.0,0.5]])
+
+    truth_pri = np.zeros([2,nsteps_model])
+    truth_pri[:,0] = np.array([0.5,0.5])
+
+    
+    # Posterior stats, one copy of the truth signal, and the observations
+    model_pst_mean = np.zeros([2,nsteps_obs])
+    model_pst_cov  = np.zeros([2,2,nsteps_obs])
+    
+    model_pst_mean[:,0]  = model_pri_mean[:,0]
+    model_pst_cov[:,:,0] = model_pri_cov[:,:,0]
+
+    truth_pst = np.zeros([2,nsteps_obs])
+    truth_pst[:,0] = truth_pri[:,0]
     
 
-    # Initialize model state and covariance
-    model_pst_mean = np.zeros([2, nsteps])
-    model_pst_cov  = np.zeros([2, 2, nsteps])
+    obs = np.zeros([2,nsteps_obs])
+    stoch = rng_obs.standard_normal(np.shape(obs[:,0]))
+    obs[:, 0] = G @ truth_pst[:,0] + Sigma_o @ stoch
+
+    step_model = 1     # Step number for model
+    step_obs = 1       # Step number for observation
+    obs_flag = False   # Whether we had an observation last step
+    for time in t_model[1:]:
+
+        # If we just made an observation, update the prior stats from the
+        # previous posterior        
+        if (obs_flag):
+            [model_pri_mean[:,step_model], model_pri_cov[:,:,step_model]] \
+                = filter_calc_pri(F, Sigma, dt_model,
+                                  model_pst_mean[:,step_obs-1],
+                                  model_pst_cov[:,:,step_obs-1])
+        else: # Otherwise update prior stats from prior stats
+            [model_pri_mean[:,step_model], model_pri_cov[:,:,step_model]] \
+                = filter_calc_pri(F, Sigma, dt_model,
+                                  model_pri_mean[:,step_model-1],
+                                  model_pri_cov[:,:,step_model-1])
+
+        # Update true state
+        truth_pri[:,step_model] = advance_truth(rng_truth, F, Sigma, dt_model,
+                                              truth_pri[:,step_model-1])
+            
+        # Time for an observation!
+        if np.abs(np.mod(time, dt_obs)) < dt_model/10: # Time for an observation!
+            # Update truth for observation time grid
+            truth_pst[:,step_obs] = truth_pri[:,step_model]
+
+            # Generate observation
+            stoch = rng_obs.standard_normal(np.shape(obs[:,step_obs]))
+            obs[:,step_obs] = G @ truth_pst[:,step_obs] + Sigma_o @ stoch
+
+            # Assimilate observation
+            gain_mtx = model_pri_cov[:,:,step_model] @ np.transpose(G) \
+                @ np.linalg.inv(G @ model_pri_cov[:,:,step_model] @ np.transpose(G) + Sigma_o)
+
+            model_pst_mean[:,step_obs] = model_pri_mean[:, step_model] \
+                + gain_mtx @ (obs[:, step_obs] - G @ model_pri_mean[:, step_model])
+            model_pst_cov[:,:,step_obs] = (np.identity(2) - gain_mtx @ G) @ model_pri_cov[:,:,step_model]
+            
+            # Advance step number, set observation flag
+            step_model = step_model + 1
+            step_obs = step_obs + 1
+            obs_flag = True
+
+        else: # Not time for an observation!
+            # Advance step number, set observation flag
+            step_model = step_model + 1
+            obs_flag = False
+
     
-    model_pst_mean[0, 0] = 0.5
-    model_pst_mean[1, 0] = 0.5
-    model_pst_cov[0, 0, 0] = 0.2
-    model_pst_cov[1, 1, 0] = 0.5
-
-    model_pri_mean = model_pst_mean
-    model_pri_cov  = model_pst_cov
-    
-
-    # Initial condition
-    trials[:, 0, 0] = 0.5
-    trials[:, 1, 0] = 0.5
-
-    # True state, observation of initial condition
-    true_state = np.zeros([2, nsteps])
-    true_state[0, 0] = 0.5
-    true_state[1, 0] = 0.5
-
-    obs = np.zeros([2, nsteps])
-    stoch = rng.standard_normal(obs[:, 0])
-    obs[:, 0] = G @ true_state + Sigma_o @ stoch
-
-    for step in range(1, nsteps):
-
-        # Calculate the prior stats and the true state
-        [model_pri_mean[:, step], model_pri_cov[:, step]] \
-            = filter_calc_pri(F, Sigma, dt,
-                              model_pst_mean[:,step-1],
-                              model_pst_cov[:,:,step-1])
-        true_state[:, step] = advance_truth(rng, F, Sigma, dt,
-                                            true_state[:, step-1])
-        
-        
-    # Plot a single trial
-    fig = plt.figure(constrained_layout=True)
-    fig.set_size_inches(7.5, 3)
-
-    ax = fig.add_subplot()
-    ax.plot(t, trials[0, 0, :], color='#E69F00', label=r'$u_1$')
-    ax.plot(t, trials[0, 1, :], color='#56B4E9', label=r'$u_2$')
-
-    ax.set_title('Single Trajectory')
-    ax.set_xlabel(r'$t$')
-    ax.legend()
-
-    # Save plot to file
-    plot_file_name = '1b_traj.png'
-    plt.savefig(plot_file_name, dpi=300)
-
-    # Calculate ensemble statistics
-    num_u1_mean = np.mean(trials[:, 0, :], axis=0)
-    num_u2_mean = np.mean(trials[:, 1, :], axis=0)
-
-    true_mean = 0.0
-
-    num_u1_var = np.var(trials[:, 0, :], axis=0)
-    num_u2_var = np.var(trials[:, 1, :], axis=0)
-    num_u_cov  = np.zeros_like(t)
-    for step in range(0, nsteps):
-        num_u_cov[step] = np.cov(trials[:, :, step], rowvar=False)[0,1]
-
-    true_u1_var = true_cov_mtx[0, 0]
-    true_u2_var = true_cov_mtx[1, 1]
-    true_u_cov  = true_cov_mtx[0, 1]
-
     # Plot ensemble statistics
     fig = plt.figure(constrained_layout=True)
-    fig.set_size_inches(7.5, 6)
+    fig.set_size_inches(7.5, 9)
+
+    gs = GridSpec(5, 1, figure=fig)
+
+    ax0 = fig.add_subplot(gs[0, 0])
+    ax0.plot(t_model, model_pri_mean[0,:],
+             color='#000000', linestyle='solid',
+             label=r'$\langle u_1 \rangle$ Prior')
+    ax0.plot(t_obs, model_pst_mean[0,:],
+             color='#E69F00', linestyle='dashed',
+             label=r'$\langle u_1 \rangle$ Posterior')
+    
+    
+    ax0.set_xlabel(r'$t$')
+    ax0.legend()
+
+    ax1 = fig.add_subplot(gs[1, 0])
+    ax1.plot(t_model, model_pri_mean[1,:],
+             color='#000000', linestyle='solid',
+             label=r'$\langle u_2 \rangle$ Prior')
+    ax1.plot(t_obs, model_pst_mean[1,:],
+             color='#56B4E9', linestyle='dashed',
+             label=r'$\langle u_2 \rangle$ Posterior')
+    
+    
+    ax1.set_xlabel(r'$t$')
+    ax1.legend()
+
+    ax2 = fig.add_subplot(gs[2, 0])
+    ax2.plot(t_model, model_pri_cov[0,0,:],
+             color='#000000', linestyle='solid',
+             label=r'$Var(u_1)$ Prior')
+    ax2.plot(t_obs, model_pst_cov[0,0,:],
+             color='#E69F00', linestyle='dashed',
+             label=r'$Var(u_1)$ Posterior')
+    
+    ax2.set_xlabel(r'$t$')
+    ax2.legend()
+
+    ax3 = fig.add_subplot(gs[3, 0])
+    ax3.plot(t_model, model_pri_cov[1,1,:],
+             color='#000000', linestyle='solid',
+             label=r'$Var(u_2)$ Prior')
+    ax3.plot(t_obs, model_pst_cov[1,1,:],
+             color='#56B4E9', linestyle='dashed',
+             label=r'$Var(u_2)$ Posterior')
+    
+    ax3.set_xlabel(r'$t$')
+    ax3.legend()
+
+    ax4 = fig.add_subplot(gs[4, 0])
+    ax4.plot(t_model, model_pri_cov[0,1,:],
+             color='#000000', linestyle='solid',
+             label=r'$Cov(u_1,\ u_2)$ Prior')
+    ax4.plot(t_obs, model_pst_cov[0,1,:],
+             color='#009E73', linestyle='dashed',
+             label=r'$Cov(u_1,\ u_2)$ Posterior')
+    
+    ax4.set_xlabel(r'$t$')
+    ax4.legend()
+
+    # Save plot to file
+    plot_file_name = '1e_stats.png'
+    plt.savefig(plot_file_name, dpi=300)
+
+
+    # Print out root-mean-square error
+    RMSE_u1_pri = np.sqrt(1/nsteps_model
+                          * np.sum((truth_pri[0,:] - model_pri_mean[0,:])**2))
+    RMSE_u2_pri = np.sqrt(1/nsteps_model
+                          * np.sum((truth_pri[1,:] - model_pri_mean[1,:])**2))
+    RMSE_u1_pst = np.sqrt(1/nsteps_obs
+                          * np.sum((truth_pst[0,:] - model_pst_mean[0,:])**2))
+    RMSE_u2_pst = np.sqrt(1/nsteps_obs
+                          * np.sum((truth_pst[1,:] - model_pst_mean[1,:])**2))
+    
+    print(('Root-mean-squared error:\n'
+           '  u_1 prior:     {:.4f}.\n'
+           '  u_1 posterior: {:.4f}.\n'
+           '  u_2 prior:     {:.4f}.\n'
+           '  u_2 posterior: {:.4f}.\n'
+           ).format(RMSE_u1_pri, RMSE_u1_pst, RMSE_u2_pri, RMSE_u2_pst))
+
+    # Calculate  correlations
+    autocorr_u1_pri    = np.correlate(model_pri_mean[0,:], model_pri_mean[0,:],
+                                      mode='full')
+    autocorr_u1_pri    = autocorr_u1_pri[int(autocorr_u1_pri.size/2):]
+    
+    autocorr_u2_pri    = np.correlate(model_pri_mean[1,:], model_pri_mean[1,:],
+                                      mode='full')
+    autocorr_u2_pri    = autocorr_u2_pri[int(autocorr_u2_pri.size/2):]
+    
+    corr_u1_u2_pri     = np.correlate(model_pri_mean[0,:], model_pri_mean[1,:],
+                                      mode='full')
+    corr_u1_u2_pri     = corr_u1_u2_pri[int(corr_u1_u2_pri.size/2):]
+    
+    corr_u1_pri_truth  = np.correlate(model_pri_mean[0,:], truth_pri[0,:],
+                                      mode='full')
+    corr_u1_pri_truth  = corr_u1_pri_truth[int(corr_u1_pri_truth.size/2):]
+    
+    corr_u2_pri_truth  = np.correlate(model_pri_mean[1,:], truth_pri[1,:],
+                                      mode='full')
+    corr_u2_pri_truth  = corr_u2_pri_truth[int(corr_u2_pri_truth.size/2):]
+    
+    autocorr_u1_pst    = np.correlate(model_pst_mean[0,:], model_pst_mean[0,:],
+                                      mode='full')
+    autocorr_u1_pst    = autocorr_u1_pst[int(autocorr_u1_pst.size/2):]
+    
+    autocorr_u2_pst    = np.correlate(model_pst_mean[1,:], model_pst_mean[1,:],
+                                      mode='full')
+    
+    corr_u1_u2_pst     = np.correlate(model_pst_mean[0,:], model_pst_mean[1,:],
+                                      mode='full')
+    
+    corr_u1_pst_truth  = np.correlate(model_pst_mean[0,:], truth_pst[0,:],
+                                      mode='full')
+    corr_u1_pst_truth  = corr_u1_pst_truth[int(corr_u1_pst_truth.size/2):]
+    
+    corr_u2_pst_truth  = np.correlate(model_pst_mean[1,:], truth_pst[1,:],
+                                      mode='full')
+    corr_u2_pst_truth  = corr_u2_pst_truth[int(corr_u2_pst_truth.size/2):]
+
+    # Plot correlations
+    fig = plt.figure(constrained_layout=True)
+    fig.set_size_inches(7.5, 4)
 
     gs = GridSpec(2, 1, figure=fig)
 
     ax0 = fig.add_subplot(gs[0, 0])
-    ax0.plot(t, num_u1_mean, color='#E69F00', label=r'$\langle u_1 \rangle$')
-    ax0.plot(t, num_u2_mean, color='#56B4E9', label=r'$\langle u_2 \rangle$')
-    ax0.plot(t, true_mean*np.ones_like(t), color='#000000', linestyle='dashed')
-
-    ax0.text(t[nsteps-1]/8, true_mean, r'$\langle u_1 \rangle_{eq}$',
-             backgroundcolor='white')
-    ax0.text(t[nsteps-1]/4, true_mean, r'$\langle u_2 \rangle_{eq}$',
-             backgroundcolor='white')
+    ax0.plot(t_model, corr_u1_pri_truth,
+             color='#E69F00', linestyle='solid',
+             label=r'$Corr(\langle u_1 \rangle$ Prior, $u_1$ Truth$)$')
+    ax0.plot(t_model, corr_u2_pri_truth,
+             color='#56B4E9', linestyle='solid',
+             label=r'$Corr(\langle u_2 \rangle$ Prior, $u_2$ Truth$)$')
+    
     
     ax0.set_xlabel(r'$t$')
-    ax0.set_title('Ensemble Means')
+    ax0.set_ylabel('Cross-Correlation')
+    ax0.set_ylim([-10,10])
     ax0.legend()
 
     ax1 = fig.add_subplot(gs[1, 0])
-    ax1.plot(t, num_u1_var, color='#E69F00', label=r'$Var(u_1)$')
-    ax1.plot(t, num_u2_var, color='#56B4E9', label=r'$Var(u_2)$')
-    ax1.plot(t, num_u_cov,  color='#009E73', label=r'$Cov(u_1,\ u_2)$')
-    ax1.plot(t, true_u1_var*np.ones_like(t), color='#000000', linestyle='dashed')
-    ax1.plot(t, true_u2_var*np.ones_like(t), color='#000000', linestyle='dashed')
-    ax1.plot(t, true_u_cov*np.ones_like(t),  color='#000000', linestyle='dashed')
-
-    ax1.text(t[nsteps-1]/8, true_u1_var, r'$Var(u_1)_{eq}$',
-             backgroundcolor='white')
-    ax1.text(t[nsteps-1]/4, true_u2_var, r'$Var(u_2)_{eq}$',
-             backgroundcolor='white')
-    ax1.text(t[nsteps-1]/2, true_u_cov,  r'$Cov(u_1,\ u_2)_{eq}$',
-             backgroundcolor='white')
-
+    ax1.plot(t_model, corr_u1_pst_truth,
+             color='#E69F00', linestyle='solid',
+             label=r'$Corr(\langle u_1 \rangle$ Posterior, $u_1$ Truth$)$')
+    ax1.plot(t_model, corr_u2_pst_truth,
+             color='#56B4E9', linestyle='solid',
+             label=r'$Corr(\langle u_2 \rangle$ Posterior, $u_2$ Truth$)$')
+    
+    
     ax1.set_xlabel(r'$t$')
-    ax1.set_title('Ensemble Variances')
+    ax1.set_ylabel('Cross-Correlation')
+    ax1.set_ylim([-10,10])
     ax1.legend()
+    
 
     # Save plot to file
-    plot_file_name = '1b_ens_stats.png'
+    plot_file_name = '1e_corr.png'
     plt.savefig(plot_file_name, dpi=300)
-
-
+    
 def advance_truth(rng, F, Sigma, dt, state):
 
     stoch = rng.standard_normal(np.size(state))
@@ -261,10 +365,10 @@ def advance_truth(rng, F, Sigma, dt, state):
 
 def filter_calc_pri(F, Sigma, dt, mean, cov):
 
-    coeff_mtx = np.identity([2, 2]) + dt * F
+    coeff_mtx = np.identity(2) + dt * F
 
     mean_out = coeff_mtx @ mean
-    cov_out = coeff_mtx @ cov @ np.tranpose(coeff_mtx) + Sigma
+    cov_out = coeff_mtx @ cov @ np.transpose(coeff_mtx) + Sigma
 
     return [mean_out, cov_out]
 

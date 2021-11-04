@@ -32,11 +32,12 @@
 	
 	where $\vb{Q}$ is the eigenvector matrix of $\vb{F}$, $\lambda_1$ and $\lambda_2$ are the eigenvalues of $\vb{F}$, and $\gang{\va{u}}_0$ is the initial mean of $\va{u}$. Notice that we assumed $\vb{F}$ to be diagonalizable (to utilize the eigenvalue decomposition) and that the mean is finite for large $t$ if and only if the real part of the eigenvalues of $\vb{F}$ are non-positive. If the real part of $\lambda_1$ and $\lambda_2$ are zero and their imaginary part is non-zero, then $\gang{u_1}$ and $\gang{u_2}$ will forever oscillate and there will be no equilibrium mean. On the other hand, if the real part of $\lambda_1$ and $\lambda_2$ are negative then $\gang{u_1}$ and $\gang{u_2}$ will always decay toward zero and thus the equilibrium mean will exist, i.e., either the real part of the eigenvalues of $\vb{F}$ must be negative or the eigenvalues of $\vb{F}$ must be zero. Since the eigenvalues of $\vb{F}$ are given by
 	
-	\begin{equation}
-		\lambda = \frac{1}{2}\,\gpr{\gpr{F_{11} + F_{22}} \pm \sqrt{\gpr{F_{11} - F_{22}}^2 - 4\,F_{12}\,F_{21}}},
-	\end{equation}
+	\begin{align}
+		\lambda_1,\ \lambda_2 &= \frac{1}{2}\,\gpr{\gpr{F_{11} + F_{22}} \pm \sqrt{\gpr{F_{11} - F_{22}}^2 + 4\,F_{12}\,F_{21}}} \nonumber \\
+			&= \frac{1}{2}\,\gpr{\tr{\vb{F}} \pm \sqrt{\gpr{\tr{\vb{F}}}^2 - 4\,\det{\vb{F}}}}
+	\end{align}
 	
-	this is equivalent to the condition that $\tr{\vb{F}} = F_{11} + F_{22} \leq 0$. Further, we have that $\det{\vb{F}} \geq 0$
+	this is equivalent to the condition that $\tr{\vb{F}} = F_{11} + F_{22} \leq 0$. Further, we have that $\det{\vb{F}} = \lambda_1\,\lambda_2 \geq 0$ by the non-positivity of the eigenvalues of $\vb{F}$.
 	
 	Now, to calculate the the equilibrium covariance it is easier to calculate the evolutions of $\vr{u_1}$, $\vr{u_2}$, and $\cov{u_1}{u_2}$ individually. We begin by stating the evolution of $\gang{u_1}$ and $\gang{u_2}$ in scalar form
 	
@@ -77,7 +78,7 @@
 			&= \gpr{2\,\gpr{F_{11}\,\gang{u_1^2} + F_{12}\,\gang{u_1\,u_2}} + \sigma_1^2}\,dt,
 	\end{align}
 	
-	where we have utilize the fact that $u_1$ and $dW_1$ are independent. We may thus obtain
+	where we have utilized the fact that $u_1$ and $dW_1$ are independent. We may thus obtain
 	
 	\begin{align}
 		d\vr{u_1} &= d\gang{u_1^2} - 2\,\gang{u_1}\,d\gang{u_1} \nonumber \\
@@ -211,5 +212,84 @@
 	\begin{equation}
 		\vb{K}_{k+1} = \vb{\Sigma}_{k+1 \vert k}\,\vb{G}^T\,\gpr{\vb{G}\,\vb{\Sigma}_{k+1 \vert k}\,\vb{G}^T + \vb{\Sigma}^{o}}^{-1}.
 	\end{equation}
+	
+	Below we include a plot of the prior and posterior statistics (Figure~\ref{fig:1c_stats}) and cross correlation between the truth signal and prior and posterior mean (Figure~\ref{fig:1c_corr}). Both the simulation time-step size and observation time-step size used were $\Delta t = 0.25$. We found that the root-mean-square error for $\gang{u_1}$ was $0.1151$ for prior and $0.0199$ for posterior, and the root-mean-square error for $\gang{u_2}$ was $0.3927$ for prior and $0.3720$ for posterior.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1c_stats.png}
+		\caption{The prior and posterior statistics for the Kalman filter of the model described by Eqs.~\ref{eqs:model_1} with parameters from part b). Note that the although the prior and posterior means tend to agree, the posterior covariances and notably smaller than the prior covariances.}
+		\label{fig:1c_stats}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1c_corr.png}
+		\caption{The cross-correlation between the truth signal and the prior and posterior mean for the Kalman filter of the model described by Eqs.~\ref{eqs:model_1} with parameters from part b). Note that the posterior mean is slightly more correlated to the truth signal than the prior mean.}
+		\label{fig:1c_corr}
+	\end{figure}
+	
+	Source code is available from the GitHub repository
+	
+	\begin{center}
+		\url{https://github.com/jasonltorchinsky/MATH833_HW/releases/tag/hw3}
+	\end{center}
+
+	and is given in Appendix~\ref{app:code_1c}. In short, the code takes a input parameters \texttt{-{-}F\_11}, \texttt{-{-}F\_12}, \texttt{-{-}F\_21}, \texttt{-{-}F\_12}, \texttt{-{-}sigma\_1}, \texttt{-{-}sigma\_2}, \texttt{-{-}g\_1}, \texttt{-{-}g\_{2}}, \texttt{-{-}sigma\_1o}, and \texttt{-{-}sigma\_2o} which correspond to $F_{11}$, $F_{12}$, $F_{21}$, $F_{22}$, $\sigma_1$, $\sigma_2$, $g_1$, $g_2$, $\sigma_1^{o}$, and $\sigma_2^{o}$ respectively. The code is very similar to that of part b), with the addition of storing the prior and posterior statistics, as well as the truth signal. It is a relatively straightforward implementation of the aforementioned algorithm, and also calculates the root-mean-square error and cross-correlation between the prior and posterior means and the truth signal.
+	
+	\item Using the code from part c) with minor modifications (specifically to output file names), we generated a plot of the prior and posterior statistics (Figure~\ref{fig:1d_stats}) and cross correlation between the truth signal and prior and posterior mean (Figure~\ref{fig:1d_corr}). Both the simulation time-step size and observation time-step size used were $\Delta t = 0.25$. We found that the root-mean-square error for $\gang{u_1}$ was $0.1070$ for prior and $0.0199$ for posterior, and the root-mean-square error for $\gang{u_2}$ was $0.3427$ for prior and $0.3334$ for posterior.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1d_stats.png}
+		\caption{The prior and posterior statistics for the Kalman filter of the model described by Eqs.~\ref{eqs:model_1} with parameters from part b), except with $g_2 = 0$. Note that the although the prior and posterior means tend to agree, the posterior covariances and notably smaller than the prior covariances, except for the variance of $u_2$ which is similar for both prior and posterior statistics. The variance of $u_2$ and the covariance between $u_1$ and $u_2$ is slightly larger than that from the case in part c).}
+		\label{fig:1d_stats}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1d_corr.png}
+		\caption{The cross-correlation between the truth signal and the prior and posterior mean for the Kalman filter of the model described by Eqs.~\ref{eqs:model_1} with parameters from part b) except with $g_2 = 0$. Note that the prior and posterior mean for $u_2$ is slightly less than that of $u_1$.}
+		\label{fig:1d_corr}
+	\end{figure}
+	
+	\item Using the code from parts b) and c) with minor modifications (specifically to output file names), we generated the same plots as in parts b) and c) with the different system parameters (see Figures~\ref{fig:1e_eq_pdf}, \ref{fig:1e_traj}, \ref{fig:1e_ens_stats}, \ref{fig:1e_stats}, and \ref{fig:1e_corr}). We found that the root-mean-square error for $\gang{u_1}$ was $0.1006$ for prior and $0.0198$ for posterior, and the root-mean-square error for $\gang{u_2}$ was $0.3429$ for prior and $0.3375$ for posterior.
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1e_eq_pdf.png}
+		\caption{The equilibrium probability density function for Eqs.~\ref{eqs:model_1} with the parameters $F_{11} = F_{22} = -1$, $F_{12} = -F_{21} = 0.1$, $\sigma_1 = 0.2$, and $\sigma_2 = 0.5$.}
+		\label{fig:1e_eq_pdf}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1e_traj.png}
+		\caption{A single realization of the model given by Eqs.~\ref{eqs:model_1} with the parameters $F_{11} = F_{22} = -1$, $F_{12} = -F_{21} = 0.1$, $\sigma_1 = 0.2$, and $\sigma_2 = 0.5$, with initial condition $u_1 = u_2 = 0.5$.}
+		\label{fig:1e_traj}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1e_ens_stats.png}
+		\caption{The ensemble statistics for 500 realizations of the model given by Eqs.~\ref{eqs:model_1} with the parameters $F_{11} = F_{22} = -1$, $F_{12} = -F_{21} = 0.1$, $\sigma_1 = 0.2$, and $\sigma_2 = 0.5$, with initial condition $u_1 = u_2 = 0.5$ for each realization. The equilibrium values for the means and variances are given by the dashed horizontal black lines.}
+		\label{fig:1e_ens_stats}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1e_stats.png}
+		\caption{The prior and posterior statistics for the Kalman filter of the model described by Eqs.~\ref{eqs:model_1} with parameters from part c) except with $F_{12} = F_{21} = 0.1$. Note that the although the prior and posterior means tend to agree, the posterior covariances and notably smaller than the prior covariances, except for the variance of $u_2$ which is nearly identical for both prior and posterior statistics. The variance of $u_2$ and the covariance between $u_1$ and $u_2$ is slightly larger than that from the case in part d).}
+		\label{fig:1e_stats}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.75\textwidth]{../../src/1e_corr.png}
+		\caption{The cross-correlation between the truth signal and the prior and posterior mean for the Kalman filter of the model described by Eqs.~\ref{eqs:model_1} with parameters from part c) except with $F_{12} = F_{21} = 0.1$. Note that the prior and posterior mean for $u_2$ is slightly less than that of $u_1$.}
+		\label{fig:1e_corr}
+	\end{figure}
+	
+	The parameters $F_{12}$ and $F_{21}$ correspond to the `interaction strength' between $u_1$ and $u_2$.
 	
 \end{enumerate}

@@ -100,7 +100,7 @@ def main(argv):
     cb = plt.colorbar(cf)
 
     # Save plot to file
-    plot_file_name = '1b_eq_pdf.png'
+    plot_file_name = '1e_eq_pdf.png'
     plt.savefig(plot_file_name, dpi=300)
 
     ## Simulate trajectories of 100 time units
@@ -139,7 +139,7 @@ def main(argv):
     ax.legend()
 
     # Save plot to file
-    plot_file_name = '1b_traj.png'
+    plot_file_name = '1e_traj.png'
     plt.savefig(plot_file_name, dpi=300)
 
     # Calculate ensemble statistics
@@ -198,7 +198,7 @@ def main(argv):
     ax1.legend()
 
     # Save plot to file
-    plot_file_name = '1b_ens_stats.png'
+    plot_file_name = '1e_ens_stats.png'
     plt.savefig(plot_file_name, dpi=300)
 
 def p_eq(F, Sigma, x, y):
