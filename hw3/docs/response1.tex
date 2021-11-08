@@ -134,7 +134,7 @@
 	
 	As $\vr{u_1}$ and $\vr{u_2}$ must be positive, we also have that the trace of $\vb{F}$ must be negative. \textbf{In summary}, for the equilibrium distribution to exist, we must have $\tr{\vb{F}} = F_{11} + F_{22} < 0$ and $\det{\vb{F}} = F_{11}\,F_{22} - F_{12}\,F_{21} > 0$. Note that this also implies that $\gang{\va{u}}_{eq} = \va{0}$.
 	
-	\item Below we include a plot of the equilibrium probability denisty function (Figure~\ref{fig:1b_eq_pdf}), a single trajectory for 100 time-units (Figure~\ref{fig:1b_traj}), and the ensemble statistics calculated from 500 trajectories (Figure~\ref{fig:1b_ens_stats}). Each realization utilized a time-step size of $\Delta t = 0.1$.
+	\item Below we include a plot of the equilibrium probability density function (Figure~\ref{fig:1b_eq_pdf}), a single trajectory for 100 time-units (Figure~\ref{fig:1b_traj}), and the ensemble statistics calculated from 500 trajectories (Figure~\ref{fig:1b_ens_stats}). Each realization utilized a time-step size of $\Delta t = 0.1$.
 	
 	\begin{figure}[H]
 		\centering
@@ -171,7 +171,7 @@
 		\va{u}_{k+1} = \gpr{\vb{\mathcal{I}} + h\,\vb{F}}\,\va{u}_{k} + \sqrt{h}\,\vb{\Sigma}\,\va*{\xi}_{k+1}
 	\end{equation}		
 	
-	where $k$ indexes the time-step, $\vb{\mathcal{I}}$ is the identity matrix, $h$ is the time-step size (e.g., $h = 0.1$ in the realizations in part b))m and $\va*{\xi}_{k+1}$ is a vector of independent zero-mean unit-variance Gaussian noise.	We also write the observation model in discretized form as a matrix equation
+	where $k$ indexes the time-step, $\vb{\mathcal{I}}$ is the identity matrix, $h$ is the time-step size (e.g., $h = 0.1$ in the realizations in part b)) and $\va*{\xi}_{k+1}$ is a vector of independent zero-mean unit-variance Gaussian noise.	We also write the observation model in discretized form as a matrix equation
 
 	\begin{equation}
 		\va{v}_{k+1} = \vb{G}\,\va{u} + \vb{\Sigma}^{o}\,\va*{\zeta}_{k+1}
@@ -239,6 +239,8 @@
 	
 	\item Using the code from part c) with minor modifications (specifically to output file names), we generated a plot of the prior and posterior statistics (Figure~\ref{fig:1d_stats}) and cross correlation between the truth signal and prior and posterior mean (Figure~\ref{fig:1d_corr}). Both the simulation time-step size and observation time-step size used were $\Delta t = 0.25$. We found that the root-mean-square error for $\gang{u_1}$ was $0.1070$ for prior and $0.0199$ for posterior, and the root-mean-square error for $\gang{u_2}$ was $0.3427$ for prior and $0.3334$ for posterior.
 	
+	Qualititavely, $g_2 = 0$ means that the Kalman filter always observes $u_2 = 0$, which is the equilbrium mean (plus some noise) for $u_2$. This observation influences the dynamics of $u_1$ through the $F_{12}\,u_2$ term of the $u_1$ dynamics equation. 
+	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.75\textwidth]{../../src/1d_stats.png}
@@ -255,6 +257,8 @@
 	
 	\item Using the code from parts b) and c) with minor modifications (specifically to output file names), we generated the same plots as in parts b) and c) with the different system parameters (see Figures~\ref{fig:1e_eq_pdf}, \ref{fig:1e_traj}, \ref{fig:1e_ens_stats}, \ref{fig:1e_stats}, and \ref{fig:1e_corr}). We found that the root-mean-square error for $\gang{u_1}$ was $0.1006$ for prior and $0.0198$ for posterior, and the root-mean-square error for $\gang{u_2}$ was $0.3429$ for prior and $0.3375$ for posterior.
 	
+	Similarly to part d), this Kalman filter always observes the euilibrium mean (plus some noise) for $u_2$. However, this observation influences the dynamics of $u_1$ much less than in part d), as the coupling coefficient $F_{12}$ is one-fifth the size.
+	
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.75\textwidth]{../../src/1e_eq_pdf.png}
@@ -265,7 +269,7 @@
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=0.75\textwidth]{../../src/1e_traj.png}
-		\caption{A single realization of the model given by Eqs.~\ref{eqs:model_1} with the parameters $F_{11} = F_{22} = -1$, $F_{12} = -F_{21} = 0.1$, $\sigma_1 = 0.2$, and $\sigma_2 = 0.5$, with initial condition $u_1 = u_2 = 0.5$.}
+		\caption{A single realization of the model given by Eqs.~\ref{eqs:model_1} with the parameters $F_{11} = F_{22} = -1$, $F_{12} = -F_{21} = 0.1$, $\sigma_1 = 0.2$, and $\sigma_2 = 0.5$, with initial condition $u_1 = u_2 = 0.5$. The smaller cross-coefficients $F_{12}$ and $F_{21}$ compared with part b) is reflected in the general `alignment' of the distribution with the lines $x = 0$ and $y = 0$.}
 		\label{fig:1e_traj}
 	\end{figure}
 	
