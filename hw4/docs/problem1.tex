@@ -1,0 +1,17 @@
+\section{1}
+
+Consider a linear stochastic differential equation (SDE) with multiplicative noise. If our target distribution is the uniform distribution
+
+\begin{equation}
+	\func{p}{x} = \left\lbrace \mqty{\frac{1}{c - b},\qquad & b < x < c, \\[6pt]
+	                                 0,\qquad               & \text{otherwise},} \right.
+\end{equation}
+
+then derive that the linear SDE with multiplicative noise has the following form
+
+\begin{equation}
+	d\func{x}{t} = -\lambda\,\gpr{\func{x}{t} - \frac{b + c}{2}}\,dt + \sqrt{\lambda\,\gpr{\func{x}{t} - b}\,\gpr{c - \func{x}{t}}}\,d\func{W}{t}.
+\end{equation}
+
+Run a numerical simulation to verify that the above SDE does provide a uniform distribution at the statistical equilibrium, and be certain to include your code.
+

@@ -1,0 +1,18 @@
+\section{3}
+
+Consider the following real-valued one-dimensional stochastic differential equation
+
+\begin{equation}
+	du = \gpr{-a\,u + f}\,dt + \sigma\,dW_{u},
+\end{equation}
+
+with $a = f = 1$ and $\sigma = 0.5$. Assume that observations of this system are available at every $\Delta t = 0.25$ time-units, and the total period over which observations are made is 100 time-units. The observational noise is a zero-mean Gaussian distribution with variance 0.001.
+
+\begin{enumerate}[a)]
+	\item Generate a time-series and the discrete observations.
+	
+	\item Assume the parameters $a$ and $\sigma$ are known, but $f$ is unknown. Use the above time-series and the standard Kalman filter to estimate the parameter $f$. [Here, you may augment the system by adding another equation $\dv{f}{t} = 0$ and assume the initial value of $f$ satisfies a Gaussian distribution with zero mean and a specific variance.]
+	
+	\item If you increase or decrease $\Delta t$, how does your parameter estimation skill change? Use numerical simulations to validate your conclusion.
+\end{enumerate}
+
