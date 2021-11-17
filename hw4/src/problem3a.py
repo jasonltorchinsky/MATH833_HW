@@ -20,6 +20,9 @@ def main(argv):
     a = 1
     f = 1
     sigma = 0.5
+
+    g = 1
+    sigma_o = 0.25
     
 
     helpStr = ("problem3.py -a <decay parameter> "
@@ -27,9 +30,11 @@ def main(argv):
                "-s <stochastic forcing strength>")
     try:
         # Dummy short names
-        opts, args = getopt.getopt(argv, "ha:f:s:", ['decay=',
-                                                     'detforce=',
-                                                     'stochforce='])
+        opts, args = getopt.getopt(argv, "ha:f:s:g:z:", ['decay=',
+                                                         'detforce=',
+                                                         'stochforce=',
+                                                         'obs=',
+                                                         'obsnoise='])
     except getopt.GetoptError:
         print(helpStr)
         sys.exit(2)
@@ -44,13 +49,19 @@ def main(argv):
             f = float(arg)
         elif opt in ('-s', '--stochforce'):
             sigma = float(arg)
+        elif opt in ('-g', '--obs'):
+            g = float(arg)
+        elif opt in ('-z', '--obsnoise'):
+            sigma_o = float(arg)
 
     # Print startup message
     print(("Starting Problem 3 with:\n"
-           "  a     = {:.2f}.\n"
-           "  f     = {:.2f}.\n"
-           "  sigma = {:.2f}.\n"
-           ).format(a, f, sigma))
+           "  a       = {:.2f}.\n"
+           "  f       = {:.2f}.\n"
+           "  sigma   = {:.2f}.\n"
+           "  g       = {:.2f}.\n"
+           "  sigma_o = {:.2f}.\n"
+           ).format(a, f, sigma, g, sigma_o))
 
     
     ## Simulate trajectories of 100 time units
@@ -72,24 +83,35 @@ def main(argv):
     trials[:, 0, 0] = 0.0
     #trials[:, 0, 0] = f/a + (np.sqrt(sigma**2 / (2*a))
     #                         * rng.standard_normal([ntrials,]))
+    obs = np.zeros_like(trials)
     
     for step in range(1, nsteps):
         for trial in range(ntrials) :
             trials[trial, :, step] = advance_state(rng, a, f, sigma, dt,
                                                    trials[trial, :, step-1])
+            obs[trial, :, step] = observe_state(rng, g, sigma_o,
+                                                trials[trial, :, step-1])
 
     # Plot a single trial
     fig = plt.figure(constrained_layout=True)
-    fig.set_size_inches(7.5, 3)
+    fig.set_size_inches(7.5, 6)
 
-    gs = GridSpec(1, 1, figure=fig)
+    gs = GridSpec(2, 1, figure=fig)
 
     ax0 = fig.add_subplot(gs[0, 0])
     ax0.plot(t, trials[0, 0, :], color='#E69F00', label=r'$u$')
+    
+    ax1 = fig.add_subplot(gs[1, 0])
+    ax1.plot(t, obs[0, 0, :] - trials[0, 0, :], color='#56B4E9',
+             label=r'observed $u$ - true $u$')
 
-    ax0.set_title('Single Trajectory')
-    ax0.set_xlabel(r'$t$')
-    ax0.legend()
+    axs = [ax0, ax1]
+    for ax in axs:
+        ax.set_xlabel(r'$t$')
+        ax.legend()
+    
+    fig.suptitle('Single Trajectory')
+    
 
     
     # Save plot to file
@@ -140,6 +162,13 @@ def advance_state(rng, a, f, sigma, dt, state):
         + sigma * np.sqrt(dt) * stoch[0]
     
     return state_out
+
+def observe_state(rng, g, sigma_o, state):
+
+    stoch = rng.standard_normal(np.size(state))
+    
+    return g * state + sigma_o * stoch[0]
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
