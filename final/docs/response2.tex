@@ -1,0 +1,13 @@
+\textit{Response.}
+
+The posterior covariance will not always converge to a constant matrix asymptotically using the Kalman filter for linear Gaussian systems, and will only converge under specific conditions. For example, consider the following dynamical and observational models in a standard Kalman filter
+
+\begin{subequations}
+	\begin{align}
+		\va{u}_{k+1 \vert k} &= \vb{F}\,\va{u}_{k \vert k} + \va*{\sigma}_{k+1}, \\
+		\va{v}_{k+1} &= \vb{G}\,\va{u}_{k+1} + \va*{\sigma}_{k+1}^{o},
+	\end{align}
+\end{subequations}
+
+where $\va{u}_{k+1}$ is the true signal. If the eigenvalues of $\vb{F}$ are non-negative, then the dynamical model not stable and thus the filter is not stable, and the posterior covariance will not necessarily converge to a constant matrix.
+

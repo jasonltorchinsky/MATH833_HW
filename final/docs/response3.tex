@@ -1,0 +1,58 @@
+\textit{Response.}
+
+We begin by writing $\func{p}{x}$ and $\func{q}{x}$ explicitly
+
+\begin{subequations}
+	\begin{align}
+		\func{p}{x} &= \frac{1}{\sqrt{2\,\pi\,\sigma_p^2}}\,e^{-\frac{1}{2\,\sigma_p^2}\,\gpr{x - \mu_p}^2},\\
+		\func{q}{x} &= \frac{1}{\sqrt{2\,\pi\,\sigma_q^2}}\,e^{-\frac{1}{2\,\sigma_q^2}\,\gpr{x - \mu_q}^2}.
+	\end{align}
+\end{subequations}
+
+With these, we may expand the integrand
+
+\begin{align}
+	\func{p}{x}\,\func{\log}{\frac{\func{p}{x}}{\func{q}{x}}} &= \func{p}{x}\,\func{\log}{\frac{\sigma_q}{\sigma_p}\,e^{\frac{1}{2\,\sigma_q^2}\,\gpr{x - \mu_q}^2 - \frac{1}{2\,\sigma_p^2}\,\gpr{x - \mu_p}^2}} \nonumber \\
+		&= \func{p}{x}\,\gpr{\func{\log}{\frac{\sigma_q}{\sigma_p}} + \frac{1}{2\,\sigma_q^2}\,\gpr{x - \mu_q}^2 - \frac{1}{2\,\sigma_p^2}\,\gpr{x - \mu_p}^2}.
+\end{align}
+
+Integrating this, we obtain
+
+\begin{align}
+	\int_{-\infty}^{\infty} \func{p}{x}\,\func{\log}{\frac{\func{p}{x}}{\func{q}{x}}}\,dx &= \int_{-\infty}^{\infty} \func{p}{x}\,\gpr{\func{\log}{\frac{\sigma_q}{\sigma_p}} + \frac{1}{2\,\sigma_q^2}\,\gpr{x - \mu_q}^2 - \frac{1}{2\,\sigma_p^2}\,\gpr{x - \mu_p}^2}\,dx \nonumber \\
+		&= \func{\log}{\frac{\sigma_q}{\sigma_p}} + \frac{1}{2\,\sigma_q^2}\,\int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_q}^2\,dx \nonumber \\
+			&\qquad - \frac{1}{2\,\sigma_p^2}\,\int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_p}^2\,dx.
+\end{align}
+
+The second of these integrals on the right-hand side is simply the variance of $\func{p}{x}$. We may simplify the first of these integrals on the right-hand side by cleverly adding zero to part of its integrand
+
+\begin{equation}
+	\gpr{x - \mu_q}^2 = \gpr{x - \mu_p + \mu_p - \mu_q}^2 = \gpr{x - \mu_p}^2 + 2\,\gpr{\mu_p - \mu_q}\,\gpr{x - \mu_p} + \gpr{\mu_p - \mu_q}^2.
+\end{equation}
+
+The integral then becomes
+
+\begin{align}
+	\int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_q}^2\,dx &= \int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_p}^2\,dx \nonumber \\
+			&\qquad + 2\,\gpr{\mu_p - \mu_q}\,\int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_p}\,dx \nonumber \\
+			&\qquad + \gpr{\mu_p - \mu_q}^2\,\int_{-\infty}^{\infty} \func{p}{x}\,dx.
+\end{align}
+
+We may easily calculate the integrals on the righthand-side by noting that the first is the variance of $\func{p}{x}$, the second is the cenetered-mean of $\func{p}{x}$ (i.e., exactly zero), and the third is exactly one. Therefore, we have
+
+\begin{equation}
+	\int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_q}^2\,dx = \sigma_p^2 + \gpr{\mu_p - \mu_q}^2
+\end{equation}
+
+and hence
+
+\begin{align}
+	\int_{-\infty}^{\infty} \func{p}{x}\,\func{\log}{\frac{\func{p}{x}}{\func{q}{x}}}\,dx &= \func{\log}{\frac{\sigma_q}{\sigma_p}} + \frac{1}{2\,\sigma_q^2}\,\int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_q}^2\,dx \nonumber \\
+			&\qquad - \frac{1}{2\,\sigma_p^2}\,\int_{-\infty}^{\infty} \func{p}{x}\,\gpr{x - \mu_p}^2\,dx \nonumber \\
+		&= \func{\log}{\frac{\sigma_q}{\sigma_p}} + \frac{1}{2\,\sigma_q^2}\,\gpr{\sigma_p^2 + \gpr{\mu_p - \mu_q}^2} - \frac{1}{2\,\sigma_p^2}\,\sigma_p^2 \nonumber \\
+		&= \func{\log}{\frac{\sigma_q}{\sigma_p}} + \frac{\sigma_p^2}{2\,\sigma_q^2} + \frac{1}{2\,\sigma_q^2}\,\gpr{\mu_p - \mu_q}^2 - \frac{1}{2} \nonumber \\
+		&= \gbkt{\frac{1}{2\,\sigma_q^2}\,\gpr{\mu_p - \mu_q}^2} + \frac{1}{2}\,\gbkt{\frac{\sigma_p^2}{\sigma_q^2} - 1 + 2\,\func{\log}{\frac{\sigma_q}{\sigma_p}}} \nonumber \\
+		&= \gbkt{\frac{1}{2\,\sigma_q^2}\,\gpr{\mu_p - \mu_q}^2} + \frac{1}{2}\,\gbkt{\frac{\sigma_p^2}{\sigma_q^2} - 1 + \func{\log}{\frac{\sigma_q^2}{\sigma_p^2}}}
+\end{align}
+
+which is the desired signal-dispersion decomposition.

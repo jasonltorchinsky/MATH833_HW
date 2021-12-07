@@ -1,0 +1,18 @@
+\section{3}
+
+The reltaive entropy of $q$ compared with $p$ is given by
+
+\begin{equation}
+	\func{\mathcal{P}}{\func{p}{x},\ \func{q}{x}} = \int_{-\infty}^{\infty} \func{p}{x}\,\func{\log}{\frac{\func{p}{x}}{\func{q}{x}}}\,dx.
+\end{equation}
+
+When both $\func{p}{x} \sim \func{\mathcal{N}}{\va{m}_{p},\ \vb{R}_{p}}$ and $\func{q}{x} \sim \func{\mathcal{N}}{\va{m}_{q},\ \vb{R}_{q}}$ are Gaussian, the relative entropy may be written explicitly as
+
+\begin{equation}
+	\func{\mathcal{P}}{\func{p}{x},\ \func{q}{x}} = \gbkt{\frac{1}{2}\,\gpr{\va{m}_{p} - \va{m}_{q}}^T\,\vb{R}_{q}^{-1}\,\gpr{\va{m}_{p} - \va{m}_{q}}} + \frac{1}{2}\,\gbkt{\tr{\vb{R}_{p}\,\vb{R}_{q}^{-1}} - \abs{\vb{K}} + \func{\log}{\det{\vb{R}_p\,\vb{R}_{q}^{-1}}}},
+\end{equation}
+
+where $\abs{\vb{K}}$ is the dimension of both of the distributions. The first term on the right-hand side is called the `signal' term, while the second is the `dispersion' term.
+
+Derive the signal-dispersion decomposition for the situation that both $p$ and $q$ are one-dimensional Gaussian distributions.
+

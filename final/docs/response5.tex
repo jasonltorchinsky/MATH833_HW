@@ -1,0 +1,27 @@
+\textit{Response.}
+
+One straightforward example as to why the definition of relative entropy should not be the difference $\func{\mathcal{S}}{p} - \func{\mathcal{S}}{q}$ would be $p \sim \func{\mathcal{N}}{0,\ 1}$ and $q \sim \func{\mathcal{N}}{1,\ 1}$, i.e., the model captures the uncertainty of nature well, but not the average. In this case, we may calculate the Shannon entropy of each distribution explicitly
+
+\begin{equation}
+	\func{\mathcal{S}}{p} = \frac{1}{2}\,\gpr{1 + \func{\log}{2\,\pi}},\qquad \func{\mathcal{S}}{q} = \frac{1}{2}\,\gpr{1 + \func{\log}{2\,\pi}}.
+\end{equation}
+
+The difference between the Shannon entropy of these distributions is exactly zero. Hence, if the relative entropy was defined as the difference, this result would imply that there is zero lack of information between the imperfect model and nature, which there clearly is since $p \not\sim q$. This difference may be seen in the actual relative entropy
+
+\begin{equation}
+	\func{\mathcal{P}}{p,\ q} = \int_{-\infty}^{\infty} \func{p}{x}\,\func{\log}{\frac{\func{p}{x}}{\func{q}{x}}}\,dx = \frac{1}{2}.
+\end{equation}
+
+Philosophically speaking, the issue with defining the relative entropy as the difference of Shannon entropies is that is does not relate the information or relationship between the underlying distributions. That is, $\func{\mathcal{S}}{p}$ reflects the lack of information of $p$ and, independently, $\func{\mathcal{S}}{q}$ reflects the lack of information of $q$. Their difference does not reflect how different $q$ is from $p$, but instead how different the lack of information of $p$ is from the lack of information of $q$.
+
+The key observation in defining the relative entropy is that the expected ignorance of the model should draw on the probability distribution from nature, i.e., the expected ignorance of the model is
+
+\begin{equation}
+	\ev{\func{\mathcal{I}}{q}} = -\int_{-\infty}^{\infty} \func{p}{x}\,\func{\log}{\func{q}{x}}\,dx
+\end{equation}
+
+\textbf{\textit{not}}
+
+\begin{equation}
+	\ev{\func{\mathcal{I}}{q}} = -\int_{-\infty}^{\infty} \func{q}{x}\,\func{\log}{\func{q}{x}}\,dx.
+\end{equation}

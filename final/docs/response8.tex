@@ -1,0 +1,72 @@
+\textit{Response.}
+
+\begin{enumerate}[(a)]
+
+	\item To determine the least-biased probability density function $\func{p}{x}$ based on the maximum entropy principle, we need to find the variational derivative of the Lagrange functional
+	
+	$$\mathcal{L}\gbkt{\func{p}{x}} = \mathcal{S}\gbkt{\func{p}{x}} + \lambda_0\,o\gbkt{\func{p}{x}} + \lambda_1\,a\gbkt{\func{p}{x}} + \lambda_2\,b\gbkt{\func{p}{x}},$$
+	
+	where $\lambda_0$, $\lambda_1$, and $\lambda_2$ are the Lagrange multipliers, and the functionals $o\gbkt{p}$, $a\gbkt{p}$, and $b\gbkt{p}$ are the constraints on $\func{p}{x}$
+	
+	$$o\gbkt{\func{p}{x}} = \int_{\R} \func{p}{x}\,dx = 1,\quad a\gbkt{\func{p}{x}} = \int_{\R} x\,\func{p}{x}\,dx = a,\quad b\gbkt{\func{p}{x}} = \int_{\R} x^2\,\func{p}{x}\,dx = b.$$
+	
+	We would like to explicitly note that $a$ and $b$ denote the scalar constraints on the statistical moments of $x$, while $a\gbkt{p}$ and $b\gbkt{p}$ are the previously defined functionals. Let $\func{\delta}{x}$ denote the Dirac delta distribution. The variational derivative of the Shannon entropy is given by
+	
+	\begin{align*}	
+	\frac{\delta\mathcal{S}\gbkt{p}}{\delta\func{p}{x^*}} &= \lim_{\epsilon -> 0} \frac{1}{\epsilon}\,\gpr{\mathcal{S}\gbkt{\func{p}{x} + \epsilon\,\func{\delta}{x - x^{*}}} - \mathcal{S}\gbkt{\func{p}{x}}} \\
+	&= \lim_{\epsilon \to 0} \frac{1}{\epsilon}\,\int_{\R} \func{p}{x}\,\func{\log}{\func{p}{x}} - \gpr{\func{p}{x} + \epsilon\,\func{\delta}{x - x^{*}}}\,\func{\log}{\func{p}{x} + \epsilon\,\func{\delta}{x - x^{*}}}\,dx \\
+	&= \lim_{\epsilon \to 0} \frac{1}{\epsilon}\,\gpr{\int_{\R} -\func{p}{x}\,\func{\log}{1 + \epsilon\,\frac{\func{\delta}{x - x^{*}}}{\func{p}{x}}}\,dx - \epsilon\,\func{\log}{\func{p}{x^{*}}}} \\
+	&= \lim_{\epsilon \to 0} \int_{\R} -\func{p}{x}\,\gpr{\frac{\func{\delta}{x - x^{*}}}{\func{p}{x}} + \func{\mathcal{O}}{\epsilon}}\,dx - \func{\log}{\func{p}{x^{*}}} \\
+	&= -1 - \func{\log}{\func{p}{x^{*}}},
+	\end{align*}
+	
+	where between the third and fourth lines we have utilized the Taylor series expansion of $\func{\log}{1 + z}$ for $\abs{z} < 1$ (since we are considering the limit as $\epsilon \to 0$). Further, by defining the functional $F_n\gbkt{\func{f}{x}} = \int_{\R} x^n\,\func{f}{x}\,dx$ and deriving its variational derivative
+	
+	\begin{align*}
+	\frac{\delta F_n\gbkt{f}}{\delta\func{f}{x^*}} &= \lim_{\epsilon -> 0} \frac{1}{\epsilon}\,\gpr{F_n\gbkt{\func{f}{x} + \epsilon\,\func{\delta}{x - x^{*}}} - F_n\gbkt{\func{f}{x}}} \\
+	&= \lim_{\epsilon -> 0} \frac{1}{\epsilon} \int_{\R} \epsilon\,x^n\,\func{\delta}{x - x^{*}}\,dx \\
+	&= \gpr{x^{*}}^n
+	\end{align*}
+	
+	we may easily state the variational derivatives of the functionals $o\gbkt{p}$, $a\gbkt{p}$, and $b\gbkt{p}$
+	
+	$$\frac{\delta o\gbkt{p}}{\delta\func{p}{x^*}} = 1,\quad \frac{\delta a\gbkt{p}}{\delta\func{p}{x^*}} = x^{*},\quad \frac{\delta b\gbkt{p}}{\delta\func{p}{x^*}} = \gpr{x^{*}}^2.$$
+	
+	Therefore, the variational derivative of $\mathcal{L}$ is
+	
+	$$\frac{\delta \mathcal{L}\gbkt{p}}{\delta\func{p}{x}} = -\gpr{1 + \func{\log}{\func{p}{x}}} + \lambda_0 + \lambda_1\,x + \lambda_2\,x^2.$$
+	
+	Setting this to zero, we find that the least-biased PDF $\func{p}{x}$ is given by
+	
+	$$\func{p}{x} = e^{\gpr{\lambda_0 - 1} + \lambda_1\,x + \lambda_2\,x^2},$$
+	
+	which is a Gaussian distribution with mean $a$ and variance $b$ (the latter of which must be positive since $x^2\,\func{p}{x}$ is non-negative for all $x$).
+	
+	\item Using our work from part (b), we construct the Lagrange functional
+	
+	$$\mathcal{L}\gbkt{\func{p}{x}} = \mathcal{S}\gbkt{\func{p}{x}} + \lambda_0\,o\gbkt{\func{p}{x}} + \lambda_1\,a\gbkt{\func{p}{x}} + \lambda_2\,b\gbkt{\func{p}{x}} + \lambda_3\,c\gbkt{\func{p}{x}},$$
+	
+	where $c\gbkt{p}$ is the additional constraint on $\func{p}{x}$
+	
+	$$c\gbkt{\func{p}{x}} = \int_{\R} x^3\,\func{p}{x}\,dx = c.$$
+	
+	The variational derivative of this Lagrange functional is therefore
+	
+	$$\frac{\delta \mathcal{L}\gbkt{p}}{\delta\func{p}{x}} = -\gpr{1 + \func{\log}{\func{p}{x}}} + \lambda_0 + \lambda_1\,x + \lambda_2\,x^2 + \lambda_3\,x^3,$$
+	
+	which we may set to zero to obtain the least-biased PDF $\func{p}{x}$ 
+	
+	$$\func{p}{x} = e^{\gpr{\lambda_0 - 1} + \lambda_1\,x + \lambda_2\,x^2 + \lambda_3\,x^3}.$$
+	
+	However, this cannot generally be a true PDF as it is unbounded as $x \to -\infty$ if $\lambda_3 < 0$ and unbounded as $x \to \infty$ if $\lambda_3 > 0$.
+	
+	With regard to a specific counter-example, we consider the integrals involved in the functionals $o\gbkt{p}$, $a\gbkt{p}$, $b\gbkt{p}$, and $c\gbkt{p}$. For the integrals of interest to be defined, we must have $\lambda_3 = 0$ and $\lambda_2 < 0$ which implies that $p$ must be a normal distribution. Since the skewness $c$ for all normal distributions is $0$, a concrete counter-example would be $a = 0$, $b = 1$, and $c = 1$.
+	
+	\item Based on our work from parts (a) and (b), we find that the least-biased PDF given the first-, second-, third-, and fourth-order moments is
+	
+	$$\func{p}{x} = e^{\gpr{\lambda_0 - 1} + \lambda_1\,x + \lambda_2\,x^2 + \lambda_3\,x^3 + \lambda_4\,x^4}.$$
+	
+	Although it may be an underwhelming counterexample, to show that such a PDF does not exist for all $a$, $b$, $c$, and $d$, consider $a = 0$, $b = 1$, $c = 0$, $d = -1$. Since the function $x^4\,\func{p}{x}$ is non-negative for all $x$, the fourth-order moment cannot be negative.
+
+\end{enumerate}
+

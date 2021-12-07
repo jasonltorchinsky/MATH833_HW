@@ -1,0 +1,23 @@
+\textit{Response.}
+
+We begin by writing the most general form of a linear stochastic differential equation with multiplicative noise
+
+\begin{equation}
+	d \func{x}{t} = -\lambda\,\gpr{\func{x}{t} - \mu}\,dt + \func{\sigma}{t,\ \func{x}{t}}\,d \func{W}{t},
+\end{equation}
+
+where $\lambda > 0$ is real, and $\mu$ is the mean of the target distribution. For our case, $\mu = 1$.
+
+The Fokker-Planck equation gives a differential equation for the equilibrium distribution
+
+\begin{equation}
+	-\partial_{x} \gbkt{-\lambda\,\gpr{x - \mu}\,\func{p}{x}} + \frac{1}{2}\,\partial_x^2 \gbkt{\gpr{\func{\sigma}{x}}^2\,\func{p}{x}} = 0,
+\end{equation}
+
+where we have simply set $\partial_t p = 0$ in the time-dependent Fokker-Planck equation. Plugging in the desired distribution, the first term on the left-hand side is
+
+\begin{equation}
+	-partial_x \gbkt{\lambda\,\gpr{x - \mu}\,\gpr{\alpha\,x^{-\gpr{1 + \alpha}}}} = \alpha\,\lambda\,x^{-\gpr{3 + \alpha}}
+\end{equation}
+
+\textbf{Continue typing out the equation}
