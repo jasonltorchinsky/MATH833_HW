@@ -14,10 +14,35 @@ The Fokker-Planck equation gives a differential equation for the equilibrium dis
 	-\partial_{x} \gbkt{-\lambda\,\gpr{x - \mu}\,\func{p}{x}} + \frac{1}{2}\,\partial_x^2 \gbkt{\gpr{\func{\sigma}{x}}^2\,\func{p}{x}} = 0,
 \end{equation}
 
-where we have simply set $\partial_t p = 0$ in the time-dependent Fokker-Planck equation. Plugging in the desired distribution, the first term on the left-hand side is
+where we have simply set $\partial_t p = 0$ in the time-dependent Fokker-Planck equation. We may integrate both sides of this equation to obtain
 
 \begin{equation}
-	-partial_x \gbkt{\lambda\,\gpr{x - \mu}\,\gpr{\alpha\,x^{-\gpr{1 + \alpha}}}} = \alpha\,\lambda\,x^{-\gpr{3 + \alpha}}
+	\lambda\,\gpr{x - \mu}\,\func{p}{x} + \frac{1}{2}\,\partial_x \gbkt{\gpr{\func{\sigma}{x}}^2\,\func{p}{x}} = \mathcal{C}_1,
 \end{equation}
 
-\textbf{Continue typing out the equation}
+where $\mathcal{C}_1$ is a constant of integration. Pugging in the desired distribution to the first term on the left-hand side and rearranging, we obtain
+
+\begin{equation}
+	\partial_x \gbkt{\gpr{\func{\sigma}{x}}^2\,\func{p}{x}} = 2\,\gpr{\mathcal{C}_1 - \lambda\,\alpha\,\gpr{x - \mu}\,x^{-\gpr{\alpha + 1}}}.
+\end{equation}
+
+We can integrate this equation once more to obtain
+
+\begin{equation}
+	\gpr{\func{\sigma}{x}}^2\,\func{p}{x} = 2\,\gpr{\mathcal{C}_1\,x + \frac{1}{2}\,\mathcal{C}_2 - \lambda\,\gpr{\frac{\alpha}{1 - \alpha}\,x^{1-\alpha} - \mu\,x^{-\alpha}}}.
+\end{equation}
+
+In the limit as $x \to \infty$, the left-hand side decays to zero, and so the right-hand side must decay to zero as well, i.e., $\mathcal{C}_1 = \mathcal{C}_2 = 0$. Therefore,
+
+\begin{equation}
+	\gpr{\func{\sigma}{x}}^2 = 2\,\lambda\,x\,\gpr{\frac{\mu}{\alpha} - \frac{1}{1 - \alpha}\,x}.
+\end{equation}
+
+Taking $\func{\sigma}{x}$ to be non-negative, we obtain the the desired one-dimensional linear stochastic differential equation
+
+\begin{equation}
+	d\func{x}{t} = -\lambda\,\gpr{\func{x}{t} - 1}\,dt + \sqrt{2\,\lambda\,\func{x}{t}\,\gpr{\frac{1}{\alpha} - \frac{1}{1 - \alpha}\,\func{x}{t}}}\,d \func{W}{t}.
+\end{equation}
+
+Note that the term under the square root is positive for $\frac{1 - \alpha}{\alpha} < \func{x}{t}$, which is always true given the conditions on $\alpha$ and $\func{x}{t}$.
+

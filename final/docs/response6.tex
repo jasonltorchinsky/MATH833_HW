@@ -1,2 +1,12 @@
 \textit{Response.}
 
+In the empricial theory for model selection, it is desirable to select the minimum lack of information model, i.e. for a true probability density function (PDF) $p$, a model PDF $p^M$, and the maximum entropy distribution associated with $N$ measurements $p_N$, the desired model $M$ from a class of models $\mathcal{M} = \gbrc{M_1,\ M_2,\ \dots}$ is given by
+
+\begin{equation}
+	\min_{M \in \mathcal{M}} \func{\mathcal{P}}{p_N,\ p^M} = \min_{M \in \mathcal{M}} \func{\mathcal{P}}{p,\ p^M}.
+\end{equation}
+
+The first term on right-hand side is the model error, while the second is the intrinsic barrier. The model that satisfies this equation most accurately captures the true PDF, and thus performs for long-term forecasting.
+
+On the other hand, additional observations require re-calibration of the model, and so it is advantageous to select a model that is easy to re-calibrate (e.g., one of reduced-order). 
+
